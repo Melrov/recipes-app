@@ -1,8 +1,5 @@
 body {
   background-color: #D6CBC1;
-}
-
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+  margin: 0px;
+  padding: 0px;
 }

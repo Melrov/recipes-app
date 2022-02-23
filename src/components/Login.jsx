@@ -39,6 +39,9 @@ const Header = styled.h2`
 `;
 const SubmitButton = styled(Button)({
     backgroundColor: "#D6A99A",
+    '&:hover':{
+        backgroundColor: "#E16036"
+    }
 })
 
 function Login() {

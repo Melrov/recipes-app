@@ -4,14 +4,14 @@ import useFetch from './hooks/useFetch';
 import Login from './components/Login';
 import ProtectedRoutes from './components/ProtectedRoutes';
 import Home from './components/Home';
-import Menu from './components/Menu';
+import NavBar from './components/NavBar';
 
 function App() {
   const [querry, setQuerry] = useState(null)
 
   return (
     <Router>
-    <Menu />
+    <NavBar />
       <Routes>
         <Route exact path="/" element={<ProtectedRoutes isPrivate={true}><Home /></ProtectedRoutes>} />
         <Route path="/login" element={<Login></Login>} />
