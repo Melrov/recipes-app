@@ -15,7 +15,7 @@ const Con = styled.div`
   align-items: center;
   justify-content: center;
   position: relative;
-  top: 30vh;
+  top: 22vh;
 `;
 const Form = styled.form`
   background-color: #CDD6D0;
