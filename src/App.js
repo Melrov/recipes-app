@@ -5,6 +5,8 @@ import Login from './components/Login';
 import ProtectedRoutes from './components/ProtectedRoutes';
 import Home from './components/Home';
 import NavBar from './components/NavBar';
+import Settings from './components/Settings';
+import Diet from './components/Diet';
 
 function App() {
   const [querry, setQuerry] = useState(null)
@@ -15,6 +17,8 @@ function App() {
       <Routes>
         <Route exact path="/" element={<ProtectedRoutes isPrivate={true}><Home /></ProtectedRoutes>} />
         <Route path="/login" element={<Login></Login>} />
+        <Route path='/settings' element={<Settings />} />
+        <Route path='/settings/diet' element={<Diet />} />
       </Routes>
     </Router>
   );
