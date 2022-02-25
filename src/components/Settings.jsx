@@ -1,4 +1,5 @@
 import React from 'react'
+import { NavLink } from 'react-router-dom'
 import styled from 'styled-components'
 
 const LinkCon = styled.div`
@@ -9,11 +10,24 @@ const LinkCon = styled.div`
 function Settings() {
   return (
     <div>
-        <LinkCon>
-            <a href=''>Account</a>
-            <a href=''>Dietary</a>
-            <a href=''>Account</a>
-        </LinkCon>
+        <ul>
+          <li>
+            <NavLink
+              to="/login"
+              
+            >
+              Home
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
+              to="/settings/diet"
+              
+            >
+              Diet
+            </NavLink>
+          </li>
+        </ul>
     </div>
   )
 }

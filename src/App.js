@@ -7,6 +7,8 @@ import Home from './components/Home';
 import NavBar from './components/NavBar';
 import Settings from './components/Settings';
 import Diet from './components/Diet';
+import Search from './components/SearchBar';
+import SearchResults from './components/SearchResults';
 
 function App() {
   const [querry, setQuerry] = useState(null)
@@ -16,7 +18,8 @@ function App() {
     <NavBar />
       <Routes>
         <Route exact path="/" element={<ProtectedRoutes isPrivate={true}><Home /></ProtectedRoutes>} />
-        <Route path="/login" element={<Login></Login>} />
+        <Route path='/search' element={<SearchResults />} />
+        <Route path="/login" element={<ProtectedRoutes isPrivate={false}><Login></Login></ProtectedRoutes>} />
         <Route path='/settings' element={<Settings />} />
         <Route path='/settings/diet' element={<Diet />} />
       </Routes>

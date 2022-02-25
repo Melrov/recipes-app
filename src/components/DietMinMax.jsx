@@ -29,10 +29,12 @@ function DietMinMax({ name, measurement, value, setter }) {
     showPassword: false,
   });
 
+  // !todo maybe add regex to delete characters instead
   const handleChange = (prop) => (event) => {
+      //setter(event.target.value)
     if (!isNaN(event.target.value.charAt(event.target.value.length - 1))) {
       let curr = [...value];
-      curr[prop] = parseInt(event.target.value);
+      curr[prop] = isNaN(parseInt(event.target.value)) ? 0 : parseInt(event.target.value);
       setter(curr);
     }
   };

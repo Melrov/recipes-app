@@ -10,9 +10,11 @@ import Tooltip from "@mui/material/Tooltip";
 import PersonAdd from "@mui/icons-material/PersonAdd";
 import Settings from "@mui/icons-material/Settings";
 import Logout from "@mui/icons-material/Logout";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { display } from "@mui/system";
+import { UserContext } from "../context/UserContext";
+import SearchBar from "./SearchBar";
 
 let activeStyle = {
   textDecoration: "underline",
@@ -37,7 +39,9 @@ const Con = styled.div`
 `;
 
 export default function NavBar() {
+  const { user, logout } = React.useContext(UserContext)
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const navigate = useNavigate()
 
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -62,17 +66,18 @@ export default function NavBar() {
           </ListItem>
           <ListItem>
             <NavLink
-              to="/tasks"
+              to="/search"
               style={({ isActive }) =>
                 isActive ? activeStyle : nonActiveStyle
               }
             >
-              Tasks
+              Search
             </NavLink>
           </ListItem>
         </List>
-        <Box sx={{ p: 3 }} />
-        <Tooltip title="Account settings">
+        {/* <Box sx={{ p: 3 }} /> */}
+        <SearchBar />
+        { user && <Tooltip title="Account settings">
           <IconButton
             onClick={handleClick}
             size="small"
@@ -81,9 +86,9 @@ export default function NavBar() {
             aria-haspopup="true"
             aria-expanded={open ? "true" : undefined}
           >
-            <Avatar sx={{ width: 32, height: 32 }}>M</Avatar>
+            <Avatar sx={{ width: 32, height: 32 }}>{user.charAt(0).toUpperCase()}</Avatar>
           </IconButton>
-        </Tooltip>
+        </Tooltip> }
       </Box>
       <Menu
         anchorEl={anchorEl}
@@ -127,13 +132,13 @@ export default function NavBar() {
           <Avatar /> My account
         </MenuItem>
         <Divider />
-        <MenuItem>
+        <MenuItem onClick={() => navigate('/settings')}>
           <ListItemIcon>
             <Settings fontSize="small" />
           </ListItemIcon>
           Settings
         </MenuItem>
-        <MenuItem onClick={() => console.log("hello")}>
+        <MenuItem onClick={() => logout()}>
           <ListItemIcon>
             <Logout fontSize="small" />
           </ListItemIcon>

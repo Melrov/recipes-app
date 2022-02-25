@@ -3,6 +3,7 @@ import React, { createContext, useState } from "react";
 export const UserDietContext = createContext(null);
 
 function UserDietProvider({ children }) {
+  const [useSettings, setUseSettings] = useState(false);
   const [diet, setDiet] = useState("");
   const [intolerances, setIntolerances] = useState([]);
   const [carbs, setCarbs] = useState([0, 100]);
@@ -45,6 +46,8 @@ function UserDietProvider({ children }) {
   return (
     <UserDietContext.Provider
       value={{
+        useSettings,
+        setUseSettings,
         diet,
         setDiet,
         intolerances,

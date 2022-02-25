@@ -40,6 +40,10 @@ function UserProvider(props) {
     return false;
   }, [uError, pError, userName]);
 
+  const logout = useCallback(() => {
+      setUser(null)
+  }, [])
+
   return (
     <UserContext.Provider
       value={{
@@ -51,7 +55,8 @@ function UserProvider(props) {
         uError,
         pError,
         showError,
-        login
+        login,
+        logout
       }}
     >
       {props.children}
