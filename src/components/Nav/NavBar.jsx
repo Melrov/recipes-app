@@ -13,7 +13,7 @@ import Logout from "@mui/icons-material/Logout";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { display } from "@mui/system";
-import { UserContext } from "../context/UserContext";
+import { UserContext } from "../../context/UserContext";
 import SearchBar from "./SearchBar";
 
 let activeStyle = {

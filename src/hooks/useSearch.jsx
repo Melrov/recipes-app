@@ -146,13 +146,20 @@ function useSearch(query) {
 
   useEffect(() => {
     async function init() {
-      const res = await axios({
-        baseURL: "https://api.spoonacular.com/recipes/complexSearch",
-        params: params,
-      });
-      console.log(res);
+      setData(null)
+      setError(null)
+      setLoading(null)
+      try {
+        const res = await axios({
+          baseURL: "https://api.spoonacular.com/recipes/complexSearch",
+          params: params,
+        });
+        console.log(res);
+      } catch (error) {
+        setError(error)
+      }
     }
-    if (times > 0 && query !== "") {
+    if (times > 0 && query) {
       init();
       times--;
     }

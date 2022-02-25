@@ -3,11 +3,13 @@ import styled from "styled-components";
 import InfoIcon from "@mui/icons-material/Info";
 
 const Card = styled.a`
-  width: 312px;
+  width: 190px;
   color: black;
   text-decoration: none;
   border-radius: 8px;
   height: fit-content;
+  font-size: 13px;
+  margin: 7px;
   &:hover {
     text-decoration: underline;
     box-shadow: 0px 0px 16px 1px black;
@@ -17,6 +19,7 @@ const Card = styled.a`
 const Img = styled.img`
   border-top-left-radius: 8px;
   border-top-right-radius: 8px;
+  width: 190px;
 `;
 const TitleCon = styled.div`
   display: flex;

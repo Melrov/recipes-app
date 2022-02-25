@@ -11,7 +11,7 @@ import Slider from '@mui/material/Slider';
 import TextField from '@mui/material/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
 import FormHelperText from '@mui/material/FormHelperText';
-import { UserDietContext } from "../context/UserDietContext";
+import { UserDietContext } from "../../context/UserDietContext";
 import DietMinMax from "./DietMinMax";
 
 const ITEM_HEIGHT = 48;
