@@ -13,6 +13,7 @@ function useFetch(func, query) {
 
   useEffect(() => {
     async function init() {
+      console.log('api call')
       setLastQuery(query)
       setData(null);
       setError(null);
