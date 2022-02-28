@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import styled from "styled-components";
 import { PantryContext } from "../../context/PantryContext";
+import { ShoppingListContext } from "../../context/ShoppingContex";
 
 let a = {
   aisle: "Pasta and Rice",
@@ -71,13 +72,17 @@ const NameCon = styled.div`
 
 const baseUrl = "https://spoonacular.com/cdn/ingredients_100x100/";
 function IngredientDisplay({ item }) {
-  const { changeIngredientAmount } = useContext(PantryContext)
+  const { changeItemAmount, removeItem } = useContext(ShoppingListContext)
+  const { addIngredient } = useContext(PantryContext)
   return (
     <Item>
     <div>
-      <button onClick={() => changeIngredientAmount(item.amount-1, item.id)}>-</button>
+      <button onClick={() => changeItemAmount(item.amount-1, item.id)}>-</button>
       <span>{item.amount}</span>
-      <button onClick={() => changeIngredientAmount(item.amount+1, item.id)}>+</button>
+      <button onClick={() => changeItemAmount(item.amount+1, item.id)}>+</button>
+    </div>
+    <div>
+      <button onClick={() => {addIngredient(item); removeItem(item.id)}} >Add to Pantry</button>
     </div>
       <ImgCon>
         <Img src={baseUrl + item.image} />

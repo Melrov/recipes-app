@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useContext, useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
+import { SearchContext } from "../context/SearchContext";
 import { UserDietContext } from "../context/UserDietContext";
 
 const apikey = "c63a301b210f4b7cae34c089b0a6a399";
@@ -9,9 +10,7 @@ let times = 3;
 
 function useSearch(query) {
   const {
-    useSettings,
     diet,
-    setDiet,
     intolerances,
     carbs,
     protein,
@@ -50,12 +49,20 @@ function useSearch(query) {
     sugar,
     zinc,
   } = useContext(UserDietContext);
+  const {
+    offset,
+    instructionsRequired,
+    useDiet,
+    useIntolerances,
+    useNutrition,
+  } = useContext(SearchContext);
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [lastQuery, setLastQuery] = useState(null)
 
-  const userParams = useMemo(() => {
-    if (useSettings) {
+  const nutritionParams = useMemo(() => {
+    if (useNutrition) {
       return {
         minCarbs: carbs[0],
         maxCarbs: carbs[1],
@@ -132,40 +139,78 @@ function useSearch(query) {
       };
     }
     return {};
-  }, [useSettings]);
+    //should type all the dependence's out
+  }, []);
+
+  const dietParams = useMemo(() => {
+    if(useDiet){
+      return {
+        diet: diet
+      }
+    }
+    return {}
+  }, [useDiet, diet])
+
+  const instructionsParam = useMemo(() => {
+    if(instructionsRequired){
+      return {
+        instructionsRequired: true
+      }
+    }
+    return {}
+  }, [instructionsRequired])
+
+  const intoleranceParams = useMemo(() => {
+    if(useIntolerances){
+      return {
+        intolerances: intolerances.join(", ")
+      }
+    }
+    return {}
+  }, [useIntolerances, intolerances])
 
   const params = useMemo(() => {
     return Object.assign(
       {
         query: query,
         apikey: apikey,
+        offset: offset,
       },
-      userParams
+      nutritionParams,
+      dietParams,
+      intoleranceParams,
+      instructionsParam,
     );
   }, [query, useParams]);
 
   useEffect(() => {
     async function init() {
-      setData(null)
-      setError(null)
-      setLoading(null)
+      setData(null);
+      setError(null);
+      setLoading(true);
       try {
+        console.log('api call')
         const res = await axios({
           baseURL: "https://api.spoonacular.com/recipes/complexSearch",
           params: params,
         });
+        setData(res.data)
         console.log(res);
       } catch (error) {
-        setError(error)
+        setError(error);
       }
     }
-    if (times > 0 && query) {
+    if (query && query !== lastQuery) {
+      setLastQuery(query)
+      //times--;
       init();
-      times--;
     }
-  }, [query]);
+    if(times === 0){
+      console.log('out of calls')
+    }
+  }, [query, lastQuery, params]);
 
-  return [data, error, loading];
+  return { data, error, loading };
 }
 
 export default useSearch;

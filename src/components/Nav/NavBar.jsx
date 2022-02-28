@@ -14,7 +14,6 @@ import { Link, NavLink, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { display } from "@mui/system";
 import { UserContext } from "../../context/UserContext";
-import SearchBar from "./SearchBar";
 
 let activeStyle = {
   textDecoration: "underline",
@@ -64,6 +63,7 @@ export default function NavBar() {
               Home
             </NavLink>
           </ListItem>
+          { user && <>
           <ListItem>
             <NavLink
               to="/search"
@@ -74,9 +74,29 @@ export default function NavBar() {
               Search
             </NavLink>
           </ListItem>
+          <ListItem>
+            <NavLink
+              to="/pantry"
+              style={({ isActive }) =>
+                isActive ? activeStyle : nonActiveStyle
+              }
+            >
+              Pantry
+            </NavLink>
+          </ListItem>
+          <ListItem>
+            <NavLink
+              to="/shoppinglist"
+              style={({ isActive }) =>
+                isActive ? activeStyle : nonActiveStyle
+              }
+            >
+              Shopping List
+            </NavLink>
+          </ListItem>
+          </> }
         </List>
         {/* <Box sx={{ p: 3 }} /> */}
-        <SearchBar />
         { user && <Tooltip title="Account settings">
           <IconButton
             onClick={handleClick}
@@ -125,13 +145,13 @@ export default function NavBar() {
         transformOrigin={{ horizontal: "right", vertical: "top" }}
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
-        <MenuItem>
+        {/* <MenuItem>
           <Avatar /> Profile
         </MenuItem>
         <MenuItem>
           <Avatar /> My account
         </MenuItem>
-        <Divider />
+        <Divider /> */}
         <MenuItem onClick={() => navigate('/settings')}>
           <ListItemIcon>
             <Settings fontSize="small" />

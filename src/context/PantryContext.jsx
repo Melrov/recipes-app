@@ -1,4 +1,6 @@
-import React, { createContext, useState, useCallback } from "react";
+import React, { createContext, useState, useCallback, useEffect, useContext } from "react";
+import useSearchInfo from "../hooks/useSearchInfo";
+import { ShoppingListContext } from "./ShoppingContex";
 
 export const PantryContext = createContext(null);
 
@@ -239,7 +241,9 @@ const example = {
 
 function PantryProvider({ children }) {
   const [ingredients, setIngredients] = useState([]);
-  const [ranOutOfIngredients, setRanOutOfIngredients] = useState([])
+  const [query, setQuery] = useState("")
+  const { data, error, loading } = useSearchInfo(query)
+  const { addItem } = useContext(ShoppingListContext)
 
     const getIngredientIndex = useCallback((id) => {
         for(let i = 0; i < ingredients.length; i++){
@@ -248,7 +252,7 @@ function PantryProvider({ children }) {
             }
         }
         return -1
-    })
+    }, [ingredients])
 
   const isInPantry = useCallback((id) => {
     if(getIngredientIndex(id) >= 0){
@@ -261,19 +265,32 @@ function PantryProvider({ children }) {
     setIngredients((curr) => [...curr, ingredient])
   }, [])
 
+  const addIngredientById = useCallback((id) => {
+    setQuery("food/ingredients/" + id + "/information?amount=1")
+  }, [])
+
+  useEffect(() => {
+    if(data){
+        setIngredients((curr) => [...curr, data])
+    }
+  }, [data])
+
   const changeIngredientAmount = useCallback((amount, id) => {
       const index = getIngredientIndex(id)
     if(index >= 0){
         let newObj = ingredients[index]
-        newObj.amount += amount
+        newObj.amount = amount
         if(newObj.amount <= 0){
-            
+            addItem(ingredients[index])
+            setIngredients(curr => [...curr.slice(0, index), ...curr.slice(index+1)])
         }
-        setIngredients(curr => [...curr.slice(0, index), ])
+        else{
+            setIngredients(curr => [...curr.slice(0, index), newObj, ...curr.slice(index+1)])
+        }
     }
-  }, [])
+  }, [ingredients])
 
-  return <PantryContext.Provider value={{ingredients}}>{children}</PantryContext.Provider>;
+  return <PantryContext.Provider value={{ingredients, isInPantry, addIngredient, changeIngredientAmount, addIngredientById}}>{children}</PantryContext.Provider>;
 }
 
 export default PantryProvider;

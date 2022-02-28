@@ -1,8 +1,9 @@
 import React from "react";
 import styled from "styled-components";
 import InfoIcon from "@mui/icons-material/Info";
+import { useNavigate } from "react-router-dom";
 
-const Card = styled.a`
+const Card = styled.div`
   width: 190px;
   color: black;
   text-decoration: none;
@@ -24,7 +25,7 @@ const Img = styled.img`
 const TitleCon = styled.div`
   display: flex;
   align-items: center;
-  background-color: blue;
+  background-color: #E16036;
   border-bottom-left-radius: 8px;
   border-bottom-right-radius: 8px;
   padding-right: 5px;
@@ -40,8 +41,9 @@ const Title = styled.h3`
 `;
 
 function ResultCard({ item }) {
+  const navigate = useNavigate()
   return (
-    <Card href={"/search/" + item.id}>
+    <Card onClick={() => navigate("/search/" + item.id)}>
       <Img src={item.image}></Img>
       <TitleCon>
         <Title>{item.title}</Title>

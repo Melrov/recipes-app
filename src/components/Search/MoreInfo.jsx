@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext, useCallback } from "react";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
+import { RecipesContext } from "../../context/RecipesContext";
 import useFetch from "../../hooks/useFetch";
+import useSearchInfo from "../../hooks/useSearchInfo";
 import Ingredients from "./Ingredients";
 
-const data = {
+const dataa = {
   vegetarian: false,
   vegan: false,
   glutenFree: false,
@@ -934,48 +936,63 @@ const InfoCon = styled.div`
 `;
 
 function MoreInfo() {
-  const [querry, setQuerry] = useState(null);
+  const [query, setQuery] = useState(null);
   const { id } = useParams();
-  //const { data, error, loading } = useFetch(querry)
+  const { data, error, loading } = useSearchInfo("recipes/" + id + "/information");
+  const { addRecipe, removeRecipe, isInRecipes } = useContext(RecipesContext)
 
   useEffect(() => {
     if (id) {
-      setQuerry(id);
+      setQuery("recipes/" + id + "/information");
     }
   }, [id]);
 
-  function htmlDecode(input) {
-    var e = document.createElement("div");
-    e.innerHTML = input;
-    return e.childNodes.length === 0 ? "" : e.childNodes[0].nodeValue;
+  function recipeClick() {
+    console.log('ran')
+    if(!isInRecipes(data.id)){
+      addRecipe(data)
+    }
+    else{
+      removeRecipe(data.id)
+    }
   }
 
   const x = "<div>Hello</div>";
   return (
     <div>
-      <h2>{data.title}</h2>
-      <img src={data.image} />
-      <InfoCon>
-        <div>
-          <span>{`$${parseInt(data.pricePerServing) / 100} per serving`}</span>
-        </div>
-        <div>
-          <span>{`${data.aggregateLikes} likes`}</span>
-        </div>
-        <div>
-          <span>{`Ready in ${data.readyInMinutes} minutes`}</span>
-        </div>
-        <div>
-          <span>{`Spoonacular Score ${data.spoonacularScore}%`}</span>
-        </div>
-      </InfoCon>
-      <Ingredients serving={data.servings}/>
-      <div dangerouslySetInnerHTML={{ __html: data.summary }}></div>
-      <div>
-        <h3>instructions</h3>
+      {data && (
+        <>
+          <h2>{data.title}</h2>
+          <img src={data.image} />
+          <button onClick={() => recipeClick()}>{isInRecipes(data.id) ? "Remove from Recipes" : "Add to Recipes"}</button>
+          <InfoCon>
+            <div>
+              <span>{`$${
+                parseInt(data.pricePerServing) / 100
+              } per serving`}</span>
+            </div>
+            <div>
+              <span>{`${data.aggregateLikes} likes`}</span>
+            </div>
+            <div>
+              <span>{`Ready in ${data.readyInMinutes} minutes`}</span>
+            </div>
+            <div>
+              <span>{`Spoonacular Score ${data.spoonacularScore}%`}</span>
+            </div>
+          </InfoCon>
+          <Ingredients serving={data.servings} ingredients={data.extendedIngredients}/>
+          <div dangerouslySetInnerHTML={{ __html: data.summary }}></div>
+          <div>
+            <h3>instructions</h3>
 
-        <p>{data.instructions + "Read the detailed instructions on "} <a href={data.sourceUrl}>{data.creditsText}</a></p>
-      </div>
+            <p>
+              {data.instructions + " Read the detailed instructions on "}{" "}
+              <a href={data.sourceUrl}>{data.creditsText}</a>
+            </p>
+          </div>
+        </>
+      )}
     </div>
   );
 }

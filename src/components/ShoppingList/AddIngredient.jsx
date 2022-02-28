@@ -4,6 +4,7 @@ import Icon from "@mui/material/Icon";
 import IconButton from "@mui/material/IconButton";
 import Box from "@mui/material/Box";
 import { PantryContext } from "../../context/PantryContext";
+import { ShoppingListContext } from "../../context/ShoppingContex";
 
 const baseUrl = "https://spoonacular.com/cdn/ingredients_100x100/";
 
@@ -22,8 +23,11 @@ const AddButtonR = styled.div`
 function AddIngredient({ data, setShowNew }) {
   const [item, setItem] = useState(Object.assign({}, data))
   const [customName, setCustomName] = useState(false);
-  const { ingredients, isInPantry, addIngredient, changeIngredientAmount } =
-    useContext(PantryContext);
+  const { shoppingList,
+    addItem,
+    isInShoppingList,
+    changeItemAmount, } =
+    useContext(ShoppingListContext);
 
 
   return (
@@ -48,11 +52,11 @@ function AddIngredient({ data, setShowNew }) {
     </div>
       <IconButton
         onClick={() => {
-          if(isInPantry(item.id)){
-            changeIngredientAmount(item.amount, item.id)
+          if(isInShoppingList(item.id)){
+            changeItemAmount(item.amount, item.id)
           }
           else{
-            addIngredient(item);
+            addItem(item);
           }
           setShowNew(false)
         }}

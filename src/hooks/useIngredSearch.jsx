@@ -5,7 +5,7 @@ const apikey = "c63a301b210f4b7cae34c089b0a6a399";
 
 let times = 3;
 
-function useFetch(func, query) {
+function useIngredSearch(func, query) {
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -20,7 +20,7 @@ function useFetch(func, query) {
         const res = await axios({
           baseURL: "https://api.spoonacular.com/" + func,
           params: {
-            query: query,
+            ingredientName: query,
             apiKey: apikey,
           },
         });
@@ -30,7 +30,7 @@ function useFetch(func, query) {
         setError(error);
       }
     }
-    if (query.length >= 2) {
+    if ( query.length >= 2) {
       init();
       //times--;
     }
@@ -42,4 +42,4 @@ function useFetch(func, query) {
   return { data, error, loading };
 }
 
-export default useFetch;
+export default useIngredSearch;
