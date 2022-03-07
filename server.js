@@ -1,5 +1,6 @@
 require('dotenv').config()
 const express = require("express")
+const cookieparser = require("cookie-parser")
 
 const favoritesRoutes = require("./server/routes/favorites.routes")
 const pantryRoutes = require("./server/routes/pantry.routes")
@@ -12,6 +13,7 @@ const SERVER_PORT = process.env.SERVER_PORT || 8080
 
 app.use(express.json())
 app.use(express.static(__dirname + "/build"))
+app.use()
 
 app.use("/favorites", favoritesRoutes)
 app.use("/pantry", pantryRoutes)
