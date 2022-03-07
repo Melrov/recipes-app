@@ -1,6 +1,8 @@
 import React, { createContext, useState, useCallback, useEffect, useContext } from "react";
 import useSearchInfo from "../hooks/useSearchInfo";
+import useServerFetch from "../hooks/useServerFetch";
 import { ShoppingListContext } from "./ShoppingContex";
+import { UserContext } from "./UserContext";
 
 export const PantryContext = createContext(null);
 
@@ -240,10 +242,16 @@ const example = {
 }
 
 function PantryProvider({ children }) {
+    const { userId } = useContext(UserContext)
   const [ingredients, setIngredients] = useState([]);
   const [query, setQuery] = useState("")
-  const { data, error, loading } = useSearchInfo(query)
+  //const { data, error, loading } = useSearchInfo(query)
+  //const [query, setQuery] = useState(null)
+  const { data, error, loading } = useServerFetch("put", "/api/pantry/addFav", {}, query)
+  const { reload, setReload} = useState(null)
+  const { data: pantryData, error: pantryError, loading: pantryLoading} = useServerFetch("get", `api/pantry/${userId}`, reload, {})
   const { addItem } = useContext(ShoppingListContext)
+  const [lastItem, setLastItem] = useState(null)
 
     const getIngredientIndex = useCallback((id) => {
         for(let i = 0; i < ingredients.length; i++){
@@ -262,8 +270,29 @@ function PantryProvider({ children }) {
   }, [ingredients])
 
   const addIngredient = useCallback((ingredient) => {
-    setIngredients((curr) => [...curr, ingredient])
+      setQuery({user_id: userId, ingredient_id: ingredient.id, amount: ingredient.amount})
+      setLastItem({key: "add", ingredient})
+    //setIngredients((curr) => [...curr, ingredient])
   }, [])
+
+  useEffect(() => {
+    if(data.success){
+        switch (lastItem.key) {
+            case "add":
+                setIngredients((curr) => [...curr, lastItem.ingredient])
+                break;
+            case "remove":
+
+                break;
+            case "change":
+                //add call here
+                break;
+            default:
+                break;
+        }
+        
+    }
+  }, [data])
 
   const addIngredientById = useCallback((id) => {
     setQuery("food/ingredients/" + id + "/information?amount=1")
@@ -276,7 +305,7 @@ function PantryProvider({ children }) {
   }, [data])
 
   const changeIngredientAmount = useCallback((amount, id) => {
-      const index = getIngredientIndex(id)
+    const index = getIngredientIndex(id)
     if(index >= 0){
         let newObj = ingredients[index]
         newObj.amount = amount
@@ -289,6 +318,22 @@ function PantryProvider({ children }) {
         }
     }
   }, [ingredients])
+
+  const ChangeAmount = useCallback( () => {
+      // TODO
+    const index = getIngredientIndex(lastItem.ingredient)
+    if(index >= 0){
+        let newObj = ingredients[index]
+        newObj.amount = amount
+        if(newObj.amount <= 0){
+            addItem(ingredients[index])
+            setIngredients(curr => [...curr.slice(0, index), ...curr.slice(index+1)])
+        }
+        else{
+            setIngredients(curr => [...curr.slice(0, index), newObj, ...curr.slice(index+1)])
+        }
+    }
+  })
 
   return <PantryContext.Provider value={{ingredients, isInPantry, addIngredient, changeIngredientAmount, addIngredientById}}>{children}</PantryContext.Provider>;
 }

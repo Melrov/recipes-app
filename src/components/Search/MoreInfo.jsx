@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { RecipesContext } from "../../context/RecipesContext";
 import useFetch from "../../hooks/useFetch";
 import useSearchInfo from "../../hooks/useSearchInfo";
+import useServerFetch from "../../hooks/useServerFetch";
 import Ingredients from "./Ingredients";
 
 const dataa = {
@@ -938,7 +939,8 @@ const InfoCon = styled.div`
 function MoreInfo() {
   const [query, setQuery] = useState(null);
   const { id } = useParams();
-  const { data, error, loading } = useSearchInfo("recipes/" + id + "/information");
+  //const { data, error, loading } = useSearchInfo("recipes/" + id + "/information");
+  const { data, error, loading } = useServerFetch("get", `/recipe/${id}`, null, {});
   const { addRecipe, removeRecipe, isInRecipes } = useContext(RecipesContext)
 
   useEffect(() => {

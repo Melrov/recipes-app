@@ -21,7 +21,7 @@ const AddButtonR = styled.div`
 
 function AddIngredient({ data, setShowNew }) {
   const [item, setItem] = useState(Object.assign({}, data))
-  const [customName, setCustomName] = useState(false);
+  //const [customName, setCustomName] = useState(false);
   const { ingredients, isInPantry, addIngredient, changeIngredientAmount } =
     useContext(PantryContext);
 
@@ -30,7 +30,7 @@ function AddIngredient({ data, setShowNew }) {
     <div>
       <img src={baseUrl + data.image} />
       <span>{data.nameClean ? data.nameClean : data.name}</span>
-      <input
+      {/* <input
         type="checkbox"
         name="check"
         onClick={() => setCustomName(!customName)}
@@ -40,7 +40,7 @@ function AddIngredient({ data, setShowNew }) {
         <div>
           <input type="text" />
         </div>
-      )}
+      )} */}
       <div>
       <button onClick={() => setItem(curr => ({...curr, amount: curr.amount -1}) )}>-</button>
       <span>{item.amount}</span>

@@ -9,6 +9,7 @@ import styled from "styled-components";
 import SearchResults from "./SearchResults";
 import { SearchContext } from "../../context/SearchContext";
 import useSearch from "../../hooks/useSearch";
+import useServerFetch from "../../hooks/useServerFetch";
 
 const dataa = {
   offset: 0,
@@ -66,13 +67,19 @@ function Search() {
     showSettings,
     setShowSettings,
   } = useContext(SearchContext);
-  const { data, error, loading } = useSearch(query);
+  //const { data, error, loading } = useSearch(query);
+  const { data, error, loading } = useServerFetch(
+    "get",
+    "/search/recipes",
+    query,
+    {}
+  );
 
   useEffect(() => {
-      if(data){
-          setResults(data)
-      }
-  }, [data])
+    if (data) {
+      setResults(data);
+    }
+  }, [data]);
 
   return (
     <div>
@@ -142,7 +149,7 @@ function Search() {
           <label htmlFor="Nutrition">Use the nutrition you set</label>
         </SettingsCon>
       )}
-      { results && <SearchResults data={results} /> }
+      {results && <SearchResults data={results} />}
     </div>
   );
 }

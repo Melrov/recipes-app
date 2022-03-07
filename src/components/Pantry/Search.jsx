@@ -7,6 +7,7 @@ import useFetch from "../../hooks/useFetch";
 import styled from "styled-components";
 import AddIngredient from "./AddIngredient";
 import useSearchInfo from "../../hooks/useSearchInfo";
+import useServerFetch from "../../hooks/useServerFetch";
 
 let b = {
     "id": 9266,
@@ -339,13 +340,19 @@ function Search() {
   const [singleQuery, setSingleQuery] = useState("");
   const [showResults, setShowResults] = useState(null);
   const [search, setSearch] = useState("");
-  const { data, error, loading } = useFetch("food/ingredients/search", query);
+  //const { data, error, loading } = useFetch("food/ingredients/search", query);
+  const { data, error, loading } = useServerFetch("get", "api/ingredients", {query}, {});
   const [showNew, setShowNew] = useState(false)
+  // const {
+  //   data: singleData,
+  //   error: singleError,
+  //   loading: singleLoading,
+  // } = useSearchInfo(singleQuery);
   const {
     data: singleData,
     error: singleError,
     loading: singleLoading,
-  } = useSearchInfo(singleQuery);
+  } = useServerFetch("get", "api/search/ingredientInfo", { query: singleQuery }, {});
   const [typing, setTyping] = useState(false);
   const [typingTimeout, setTypingTimeout] = useState(null);
 

@@ -98,7 +98,7 @@ async function ingredientSearch(res, query) {
   }
 }
 
-async function singleIngredientSearch(spoon_id, res, user_id) {
+async function singleIngredientSearch(res, spoon_id, user_id) {
   try {
     const { ingredient } = await query(
       "SELECT * FROM pantry WHERE pantry.ingredient_id = ? AND pantry.user_id = ?",

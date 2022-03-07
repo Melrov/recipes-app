@@ -1,6 +1,8 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
 import { PantryContext } from "../../context/PantryContext";
+import { UserContext } from "../../context/UserContext";
+import useServerFetch from "../../hooks/useServerFetch";
 
 let a = {
   aisle: "Pasta and Rice",
@@ -71,11 +73,21 @@ const NameCon = styled.div`
 
 const baseUrl = "https://spoonacular.com/cdn/ingredients_100x100/";
 function IngredientDisplay({ item }) {
+  const { userId } = useContext(UserContext)
   const { changeIngredientAmount } = useContext(PantryContext)
+  const [query, setQuery] = useState(null)
+  const { data, error, loading } = useServerFetch("patch", "/pantry/editIngredient", {ingredient_id: item.id, user_id: userId, amount: item.amount}, {})
+
+  useEffect(() => {
+    if(data){
+      reloadPantry()
+    }
+  }, [data])
+
   return (
     <Item>
     <div>
-      <button onClick={() => changeIngredientAmount(item.amount-1, item.id)}>-</button>
+      <button onClick={() => setQuery({ingredient_id: item.id, user_id: userId, amount: item.amount-1})}>-</button>
       <span>{item.amount}</span>
       <button onClick={() => changeIngredientAmount(item.amount+1, item.id)}>+</button>
     </div>

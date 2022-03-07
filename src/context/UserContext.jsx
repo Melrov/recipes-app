@@ -1,14 +1,20 @@
 import React, { createContext, useCallback, useEffect, useState } from "react";
+import useServerFetch from "../hooks/useServerFetch";
 
 export const UserContext = createContext(null);
 
 function UserProvider(props) {
+  const [userId, setUserId] = useState(null)
   const [user, setUser] = useState(null);
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const [uError, setUError] = useState(null);
   const [pError, setPError] = useState(null);
   const [showError, setShowError] = useState(false);
+  const [queryUserName, setQueryUserName] = useState(null)
+  const [queryPassword, setQueryPassword] = useState(null)
+  const [query, setQuery] = useState(null)
+  const { data, error, loading } = useServerFetch("post", "/users/login", null, {username: queryUserName, password: queryPassword})
 
   useEffect(() => {
     if (userName.length < 4 || userName.length > 10) {
@@ -23,25 +29,34 @@ function UserProvider(props) {
     }
   }, [userName, password]);
 
-  const login = useCallback((e) => {
+  const login = useCallback( (e) => {
       e.preventDefault()
     if (!showError) {
       setShowError(true);
     }
     if (!uError && !pError) {
-      setUser(userName);
-      setUserName("");
-      setPassword("");
-      setUError(null)
-      setPError(null)
-      setShowError(false)
-      return true;
+      setQueryUserName(userName)
+      setQueryPassword(password)
+      setPassword("")
     }
     return false;
-  }, [uError, pError, userName]);
+  }, [uError, pError, userName, password, showError]);
+
+  useEffect(() => {
+    if(data){
+      if(data.username && data.id){
+        setUser(data.username)
+        setUserId(data.id)
+        setUserName("")
+        setPassword("")
+        setShowError(false)
+      }
+    }
+  }, [data])
 
   const logout = useCallback(() => {
       setUser(null)
+      setUserId(null)
   }, [])
 
   return (
@@ -56,7 +71,8 @@ function UserProvider(props) {
         pError,
         showError,
         login,
-        logout
+        logout,
+        userId
       }}
     >
       {props.children}
