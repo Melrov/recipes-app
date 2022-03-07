@@ -1,66 +1,191 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import { useCallback } from "react";
 
 function useServerFetch(type, url, query, body) {
-  const [data, setData] = useState(null);
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [lastBody, setLastBody] = useState(null)
-  const [lastQuery, setLastQuery] = useState(null)
 
-  function objectsEqual(o1, o2) {
-    const entries1 = Object.entries(o1);
-    const entries2 = Object.entries(o2);
-    if (entries1.length !== entries2.length) {
-      return false;
+  const makeAPICall = useCallback(async (url, config) => {
+    try {
+      return await axios(url, config);
+    } catch (error) {
+      return { success: false, data: null, error: "Something went wrong." };
     }
-    for (let i = 0; i < entries1.length; ++i) {
-      // Keys
-      if (entries1[i][0] !== entries2[i][0]) {
-        return false;
+  }, []);
+
+  const login = useCallback(async (username, password) => {
+    return await makeAPICall("/api/users/login", {
+      headers: {
+        type: "post",
+      },
+      data: {
+        username,
+        password,
+      },
+    });
+  }, []);
+
+  const addFav = useCallback(async (user_id, recipe_id) => {
+    return await makeAPICall("/api/favorites/addFav", {
+      headers: {
+        type: "put",
+      },
+      data: {
+        user_id,
+        recipe_id,
+      },
+    });
+  }, []);
+
+  const removeFav = useCallback(async (user_id, recipe_id) => {
+    return await makeAPICall("/api/favorites/removeFav", {
+      headers: {
+        type: "delete",
+      },
+      data: {
+        user_id,
+        recipe_id,
+      },
+    });
+  }, []);
+
+  const favsByUserId = useCallback(async (user_id) => {
+    return await makeAPICall(`/api/favorites/${user_id}`, {
+      headers: {
+        type: "get",
+      },
+    });
+  }, []);
+
+  const addIngredient = useCallback(async (user_id, ingredient_id, amount) => {
+    return await makeAPICall("/api/pantry/addIngredient", {
+      headers: {
+        type: "put",
+      },
+      data: {
+        user_id,
+        ingredient_id,
+        amount
+      },
+    });
+  }, []);
+
+  const editIngredient = useCallback(async (user_id, ingredient_id, amount) => {
+    return await makeAPICall("/api/pantry/editIngredient", {
+      headers: {
+        type: "patch",
+      },
+      data: {
+        user_id,
+        ingredient_id,
+        amount
+      },
+    });
+  }, []);
+
+  const removeIngredient = useCallback(async (user_id, ingredient_id) => {
+    return await makeAPICall("/api/pantry/removeIngredient", {
+      headers: {
+        type: "delete",
+      },
+      data: {
+        user_id,
+        ingredient_id,
+      },
+    });
+  }, []);
+
+  const pantryByUserId = useCallback(async (user_id) => {
+    return await makeAPICall(`/api/pantry/${user_id}`, {
+      headers: {
+        type: "get",
+      },
+    });
+  }, []);
+
+  const shoppingListByUserId = useCallback(async (user_id) => {
+    return await makeAPICall(`/api/pantry/shoppingList/${user_id}`, {
+      headers: {
+        type: "get",
+      },
+    });
+  }, []);
+
+  const recipeById = useCallback(async (spoon_id) => {
+    return await makeAPICall(`/recipes/${spoon_id}`, {
+      headers: {
+        type: "get",
+      },
+    });
+  }, []);
+
+  const addIngredientByRecipeId = useCallback(async (recipe_id, ingredient_id, user_id, on_shopping_list = false) => {
+    return await makeAPICall('/addByRecipe_id', {
+      headers: {
+        type: "put",
+      },
+      params: {
+        recipe_id,
+        ingredient_id,
+        user_id,
+        on_shopping_list
       }
-      // Values
-      if (entries1[i][1] !== entries2[i][1]) {
-        return false;
-      }
-    }
-  
-    return true;
-  }
+    });
+  }, []);
 
+  /**
+   * 
+   * @param {*} query 
+   * @returns {} {success, data, error}
+   */
+  const searchRecipe = useCallback(async (query) => {
+    return await makeAPICall("/search/recipe", {
+      headers: {
+        type: "get",
+      },
+      params: {
+        query,
+      },
+    });
+  }, []);
 
-  useEffect(() => {
-    async function init() {
-      console.log("api call");
-      setData(null);
-      setError(null);
-      setLoading(null);
-      try {
-        const res = await axios(url, {
-          headers: {
-            type: type,
-          },
-          params: query,
-          data: body
-        });
-        console.log(res);
-        if(res.success){
-            setData(res.data);
-        }
-        else {
-            throw res.error
-        }
-      } catch (error) {
-        setError(error);
-      }
-    }
-    if(!objectsEqual(body, lastBody) || !objectsEqual(query, lastQuery)){
-        init();
-        setLastBody(Object.assign(body, {}))
-    }
-  }, [type, url, query, body]);
+  const searchIngredients = useCallback(async (query) => {
+    return await makeAPICall("/search/ingredients", {
+      headers: {
+        type: "get",
+      },
+      params: {
+        query,
+      },
+    });
+  }, []);
 
-  return { data, error, loading };
+  const searchIngredientInfo = useCallback(async (spoon_id, user_id) => {
+    return await makeAPICall("/search/ingredientInfo", {
+      headers: {
+        type: "get",
+      },
+      params: {
+        spoon_id,
+        user_id,
+      },
+    });
+  }, []);
+
+  return {
+    login,
+    addFav,
+    removeFav,
+    favsByUserId,
+    addIngredient,
+    removeIngredient,
+    editIngredient,
+    pantryByUserId,
+    shoppingListByUserId,
+    recipeById,
+    searchRecipe,
+    searchIngredients,
+    searchIngredientInfo,
+    addIngredientByRecipeId
+  };
 }
 
 export default useServerFetch;

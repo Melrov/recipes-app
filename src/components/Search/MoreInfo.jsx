@@ -932,6 +932,70 @@ const dataa = {
     "https://spoonacular.com/pasta-with-garlic-scallions-cauliflower-breadcrumbs-716429",
 };
 
+
+const newdaata = {
+  "success": true,
+  "data": {
+      "id": 3,
+      "title": "Bread Omlette",
+      "spoon_id": 635964,
+      "image": "https://spoonacular.com/recipeImages/635964-556x370.jpg",
+      "summary": "Bread Omlette might be just the main course you are searching for. One serving contains <b>827 calories</b>, <b>44g of protein</b>, and <b>30g of fat</b>. This recipe serves 1 and costs $1.72 per serving. 1 person has made this recipe and would make it again. Head to the store and pick up bread crumbs, pch salt, milk, and a few other things to make it today. To use up the salt you could follow this main course with the <a href=\"https://spoonacular.com/recipes/apple-turnovers-recipe-48175\">Apple Turnovers Recipe</a> as a dessert. From preparation to the plate, this recipe takes about <b>45 minutes</b>. All things considered, we decided this recipe <b>deserves a spoonacular score of 84%</b>. This score is awesome. Try <a href=\"https://spoonacular.com/recipes/ihop-colorado-omlette-600219\">IHOP Colorado Omlette</a>, <a href=\"https://spoonacular.com/recipes/clean-and-simple-egg-white-omlette-521458\">Clean and Simple Egg White \"Omlette</a>, and <a href=\"https://spoonacular.com/recipes/oatmeal-bread-bread-machine-bread-maker-132629\">Oatmeal Bread (Bread Machine/Bread Maker)</a> for similar recipes.",
+      "ready_in": 45,
+      "score": 83,
+      "servings": 1,
+      "spoon_likes": 0,
+      "likes": 0,
+      "source_name": "Foodista",
+      "instructions": "<ol><li>Pahile, pan garma garam kijiye....phir ek murga ka anda laiye....use sohlaiye.....phir chamach layiye....phir ande se sorry kahiye.....phir usko phod dijiye ..phir brad laiye .....use katiye aur uspar fevikol lagaiye aur ande se chipka dijiye .....phir palat dijiye ............phir bina plate mein rakhe..apne jaha man kare waha dal dijiye.........aur message kijiy.e</li></ol>",
+      "vegetarian": 0,
+      "vegan": 0,
+      "gluten_free": 0,
+      "dairy_free": 0,
+      "source_url": "http://www.foodista.com/recipe/2M6MVKZT/bread-omlette",
+      "spoon_url": "https://spoonacular.com/bread-omlette-635964",
+      "extendedIngredients": [
+          {
+              "id": 3,
+              "ingredient_id": 6,
+              "amount": 1,
+              "original": "1 cup Fresh bread crumbs",
+              "consistency": "solid",
+              "recipe_id": 3,
+              "unit": "cup"
+          },
+          {
+              "id": 4,
+              "ingredient_id": 7,
+              "amount": 4,
+              "original": "4 Eggs",
+              "consistency": "solid",
+              "recipe_id": 3,
+              "unit": ""
+          },
+          {
+              "id": 5,
+              "ingredient_id": 9,
+              "amount": 1,
+              "original": "1 pch Salt",
+              "consistency": "solid",
+              "recipe_id": 3,
+              "unit": ""
+          },
+          {
+              "id": 6,
+              "ingredient_id": 8,
+              "amount": 1,
+              "original": "1 cup Boiled milk",
+              "consistency": "liquid",
+              "recipe_id": 3,
+              "unit": "cup"
+          }
+      ]
+  },
+  "error": null
+}
+
 const InfoCon = styled.div`
   display: flex;
 `;

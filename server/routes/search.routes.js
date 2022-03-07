@@ -11,7 +11,7 @@ router.get("/ingredients", (req, res) => {
 })
 
 router.get("/ingredientInfo", (req, res) => {
-    singleIngredientSearch(res, req.query.id, req.query.uid)
+    singleIngredientSearch(res, req.query.spoon_id, req.query.user_id)
 })
 
 module.exports = router

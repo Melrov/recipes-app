@@ -67,19 +67,6 @@ function Search() {
     showSettings,
     setShowSettings,
   } = useContext(SearchContext);
-  //const { data, error, loading } = useSearch(query);
-  const { data, error, loading } = useServerFetch(
-    "get",
-    "/search/recipes",
-    query,
-    {}
-  );
-
-  useEffect(() => {
-    if (data) {
-      setResults(data);
-    }
-  }, [data]);
 
   return (
     <div>

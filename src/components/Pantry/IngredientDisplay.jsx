@@ -42,6 +42,18 @@ let b = [
   },
 ];
 
+let cc = {
+  "id": 7,
+  "ingredient_id": 7,
+  "user_id": 1,
+  "amount": 5,
+  "on_shopping_list": 0,
+  "spoon_id": 1123,
+  "name": "egg",
+  "image": "egg.png",
+  "aisle": "Milk, Eggs, Other Dairy"
+}
+
 const Item = styled.div`
   display: flex;
   flex-direction: column;
@@ -73,24 +85,37 @@ const NameCon = styled.div`
 
 const baseUrl = "https://spoonacular.com/cdn/ingredients_100x100/";
 function IngredientDisplay({ item }) {
-  const { userId } = useContext(UserContext)
-  const { changeIngredientAmount } = useContext(PantryContext)
-  const [query, setQuery] = useState(null)
-  const { data, error, loading } = useServerFetch("patch", "/pantry/editIngredient", {ingredient_id: item.id, user_id: userId, amount: item.amount}, {})
-
-  useEffect(() => {
-    if(data){
-      reloadPantry()
-    }
-  }, [data])
+  const { userId } = useContext(UserContext);
+  const { changeIngredientAmount } = useContext(PantryContext);
+  const [query, setQuery] = useState(null);
+  const { data, error, loading } = useServerFetch(
+    "patch",
+    "/pantry/editIngredient",
+    { ingredient_id: item.id, user_id: userId, amount: item.amount },
+    {}
+  );
 
   return (
     <Item>
-    <div>
-      <button onClick={() => setQuery({ingredient_id: item.id, user_id: userId, amount: item.amount-1})}>-</button>
-      <span>{item.amount}</span>
-      <button onClick={() => changeIngredientAmount(item.amount+1, item.id)}>+</button>
-    </div>
+      <div>
+        <button
+          onClick={() =>
+            setQuery({
+              ingredient_id: item.id,
+              user_id: userId,
+              amount: item.amount - 1,
+            })
+          }
+        >
+          -
+        </button>
+        <span>{item.amount}</span>
+        <button
+          onClick={() => changeIngredientAmount(item.amount + 1, item.id)}
+        >
+          +
+        </button>
+      </div>
       <ImgCon>
         <Img src={baseUrl + item.image} />
       </ImgCon>

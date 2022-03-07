@@ -275,6 +275,46 @@ const data = [
   },
 ];
 
+
+const newdaata = [
+  {
+      "id": 3,
+      "ingredient_id": 6,
+      "amount": 1,
+      "original": "1 cup Fresh bread crumbs",
+      "consistency": "solid",
+      "recipe_id": 3,
+      "unit": "cup"
+  },
+  {
+      "id": 4,
+      "ingredient_id": 7,
+      "amount": 4,
+      "original": "4 Eggs",
+      "consistency": "solid",
+      "recipe_id": 3,
+      "unit": ""
+  },
+  {
+      "id": 5,
+      "ingredient_id": 9,
+      "amount": 1,
+      "original": "1 pch Salt",
+      "consistency": "solid",
+      "recipe_id": 3,
+      "unit": ""
+  },
+  {
+      "id": 6,
+      "ingredient_id": 8,
+      "amount": 1,
+      "original": "1 cup Boiled milk",
+      "consistency": "liquid",
+      "recipe_id": 3,
+      "unit": "cup"
+  }
+]
+
 const IngredCon = styled.div`
   display: flex;
   flex-wrap: wrap;

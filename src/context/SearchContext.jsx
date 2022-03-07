@@ -4,40 +4,43 @@ import useSearch from "../hooks/useSearch";
 export const SearchContext = createContext(null);
 
 function SearchProvider({ children }) {
-  const [results, setResults] = useState(null)
-  const [query, setQuerry] = useState("");
-  const [search, setSearch] = useState("")
-  const [page, setPage] = useState(0)
+  const { searchRecipe } = useServerFetch();
+  const [results, setResults] = useState(null);
+  const [query, setQuery] = useState("");
+  const [search, setSearch] = useState("");
+  const [page, setPage] = useState(0);
   const [showSettings, setShowSettings] = useState(false);
   const [instructionsRequired, setInstructionsRequired] = useState(false);
   const [useDiet, setUseDiet] = useState(false);
   const [useIntolerances, setUseIntolerances] = useState(false);
   const [useNutrition, setUseNutrition] = useState(false);
-  const [totalResults, setTotalResults] = useState(0)
-  const [number, setNumber] = useState(0)
-  const [offset, setOffset] = useState(0)
-  const [pages, setPages] = useState(0)
+  const [totalResults, setTotalResults] = useState(0);
+  const [number, setNumber] = useState(0);
+  const [offset, setOffset] = useState(0);
+  const [pages, setPages] = useState(0);
 
   useEffect(() => {
-    if(results){
-      setTotalResults(results.totalResults)
-      if(number === 0){
-        setNumber(results.number)
+    if (results) {
+      setTotalResults(results.totalResults);
+      if (number === 0) {
+        setNumber(results.number);
       }
     }
-  }, [results, number])
+  }, [results, number]);
 
   useEffect(() => {
-    setPages(parseInt(totalResults / number))
-  }, [totalResults, number])
+    setPages(parseInt(totalResults / number));
+  }, [totalResults, number]);
 
-  
-  const submitSearch = useCallback(() => {
-    setTotalResults(0)
-    setNumber(0)
-    setOffset(0)
-    setPages(0)
-    setQuerry(search);
+  const submitSearch = useCallback(async () => {
+    const res = await searchRecipe(search);
+    if (res.success) {
+      setResults(res.data);
+      setTotalResults(0);
+      setNumber(0);
+      setOffset(0);
+      setPages(0);
+    }
   }, [search]);
 
   return (
@@ -62,7 +65,7 @@ function SearchProvider({ children }) {
         setShowSettings,
         pages,
         page,
-        setPage
+        setPage,
       }}
     >
       {children}

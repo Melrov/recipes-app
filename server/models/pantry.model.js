@@ -57,11 +57,12 @@ async function editIngredient(res, ingredient_id, user_id, amount) {
 async function getUserPantry(res, user_id) {
   try {
     const pantry = await query(
-      "SELECT * FROM pantry WHERE pantry.user_id = ? JOIN ingredients ON ingredients.id = pantry.ingredient_id",
+      "SELECT * FROM pantry JOIN ingredients ON ingredients.id = pantry.ingredient_id WHERE pantry.user_id = ?",
       [user_id]
     );
     return res.send({ success: true, data: pantry, error: null });
   } catch (error) {
+    console.log(error);
     return res.send({
       success: false,
       data: null,
@@ -86,10 +87,36 @@ async function getUserShoppingList(res, user_id) {
   }
 }
 
+async function addByRecipeId(
+  recipe_id,
+  ingredient_id,
+  user_id,
+  on_shopping_list
+) {
+  try {
+    const [recipe_ingredient] = await query(
+      "SELECT ingredient_id FROM recipe_ingredients WHERE recipe_ingredients.recipe_id = ? AND recipe_ingredients.ingredient_id = ?",
+      [recipe_id, ingredient_id]
+    );
+    await query(
+      "INSERT INTO pantry (ingredient_id, user_id, amount, on_shopping_list) VALUES (?, ?, ?, ?)",
+      [ingredient_id, user_id, 1, on_shopping_list]
+    );
+    return res.send({success: true, data: null, error: null})
+  } catch (error) {
+    return res.send({
+      success: false,
+      data: null,
+      error: "Something when wrong please try again later.",
+    });
+  }
+}
+
 module.exports = {
   addIngredient,
   removeIngredient,
   editIngredient,
   getUserPantry,
   getUserShoppingList,
+  addByRecipeId
 };
