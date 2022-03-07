@@ -16,17 +16,17 @@ async function searchRecipeById(res, spoonId) {
       spoon_id: apiRes.data.id,
       image: apiRes.data.image,
       summary: apiRes.data.summary,
-      ready_in: apiRes.data.readyInMinutes,
+      ready_in: apiRes.data.readyInMinutes || 0,
       score: apiRes.data.spoonacularScore,
-      servings: apiRes.data.servings,
-      spoon_likes: apiRes.data.aggregateLike,
+      servings: apiRes.data.servings || 1,
+      spoon_likes: apiRes.data.aggregateLike || 0,
       likes: 0,
       source_name: apiRes.data.sourceName,
       instructions: apiRes.data.instructions,
-      vegetarian: apiRes.data.vegetarian,
-      vegan: apiRes.data.vegan,
-      gluten_free: apiRes.data.glutenFree,
-      dairy_free: apiRes.data.dairyFree,
+      vegetarian: apiRes.data.vegetarian || false,
+      vegan: apiRes.data.vegan || false,
+      gluten_free: apiRes.data.glutenFree || false,
+      dairy_free: apiRes.data.dairyFree || false,
       source_url: apiRes.data.sourceUrl,
       spoon_url: apiRes.data.spoonacularSourceUrl,
     };
@@ -58,7 +58,7 @@ async function searchRecipeById(res, spoonId) {
         ingredient_id = check.id;
       }
       await query(
-        `INSERT INTO recipe_ingredients
+        `INSERT INTO recipe_ingredient
                    (ingredient_id, amount, original, consistency, recipe_id, unit)
                    VALUES (? ,?, ?, ? ,?, ?)`,
         [
@@ -71,8 +71,9 @@ async function searchRecipeById(res, spoonId) {
         ]
       );
     });
-    return res.send({ success: true, data: apiRes, error: null });
+    return res.send({ success: true, data: Object.assign(apiRes.data, {id: recipe_id}), error: null });
   } catch (error) {
+    console.log(error)
     return res.send({
       success: false,
       data: null,
@@ -99,7 +100,7 @@ async function ingredientSearch(res, query) {
 
 async function singleIngredientSearch(spoon_id, res, user_id) {
   try {
-    const { ingredient } = query(
+    const { ingredient } = await query(
       "SELECT * FROM pantry WHERE pantry.ingredient_id = ? AND pantry.user_id = ?",
       [spoon_id, user_id]
     );
@@ -128,7 +129,7 @@ async function singleIngredientSearch(spoon_id, res, user_id) {
 async function searchRecipe(res, query) {
   try {
     //get settings
-    const apiRes = apiCall(
+    const apiRes = await apiCall(
       "https://api.spoonacular.com/recipes/complexSearch",
       { query }
     );
