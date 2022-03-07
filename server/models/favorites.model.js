@@ -21,3 +21,5 @@ async function removeFavorite(res, userId, recipeId){
         });
       }
 }
+
+module.exports = { addFavorite, removeFavorite }

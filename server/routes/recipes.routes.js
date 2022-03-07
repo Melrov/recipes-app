@@ -3,7 +3,7 @@ const { getRecipeBySpoonId } = require("../models/recipes.model")
 const router = express.Router()
 
 router.get("/:spoon_id", (req, res) => {
-    getRecipeBySpoonId(req.params.spoon_id)
+    getRecipeBySpoonId(res, req.params.spoon_id)
 })
 
 module.exports = router
