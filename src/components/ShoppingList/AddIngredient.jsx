@@ -1,4 +1,4 @@
-import React, { useState, useContext, useCallback } from "react";
+import React, { useState, useContext, useCallback, useEffect } from "react";
 import styled from "styled-components";
 import Icon from "@mui/material/Icon";
 import IconButton from "@mui/material/IconButton";
@@ -21,19 +21,19 @@ const AddButtonR = styled.div`
 `;
 
 function AddIngredient({ data, setShowNew }) {
-  const [item, setItem] = useState(Object.assign({}, data))
-  const [customName, setCustomName] = useState(false);
-  const { shoppingList,
-    addItem,
-    isInShoppingList,
-    changeItemAmount, } =
+  const [item, setItem] = useState(null);
+  //const [customName, setCustomName] = useState(false);
+  const { shoppingList, addItem, isInShoppingList, changeItemAmount } =
     useContext(ShoppingListContext);
 
+  useEffect(() => {
+    setItem(Object.assign({ amount: 1 }, data));
+  }, [data]);
 
   return (
     <div>
       <img src={baseUrl + data.image} />
-      <span>{data.nameClean ? data.nameClean : data.name}</span>
+      {/* <span>{data.nameClean ? data.nameClean : data.name}</span>
       <input
         type="checkbox"
         name="check"
@@ -44,21 +44,32 @@ function AddIngredient({ data, setShowNew }) {
         <div>
           <input type="text" />
         </div>
-      )}
+      )} */}
       <div>
-      <button onClick={() => setItem(curr => ({...curr, amount: curr.amount -1}) )}>-</button>
-      <span>{item.amount}</span>
-      <button onClick={() => setItem(curr => ({...curr, amount: curr.amount +1}) )}>+</button>
-    </div>
+        <button
+          onClick={() =>
+            setItem((curr) => ({ ...curr, amount: curr.amount - 1 }))
+          }
+        >
+          -
+        </button>
+        <span>{item.amount}</span>
+        <button
+          onClick={() =>
+            setItem((curr) => ({ ...curr, amount: curr.amount + 1 }))
+          }
+        >
+          +
+        </button>
+      </div>
       <IconButton
         onClick={() => {
-          if(isInShoppingList(item.id)){
-            changeItemAmount(item.amount, item.id)
-          }
-          else{
+          if (isInShoppingList(item.id)) {
+            changeItemAmount(item.amount, item.id);
+          } else {
             addItem(item);
           }
-          setShowNew(false)
+          setShowNew(false);
         }}
       >
         <Icon sx={{ fontSize: 25 }}>add_circle</Icon>

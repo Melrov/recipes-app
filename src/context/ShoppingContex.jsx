@@ -1,23 +1,31 @@
 import React, { createContext, useCallback, useEffect, useState } from "react";
 import useSearchInfo from "../hooks/useSearchInfo";
+import useServerFetch from "../hooks/useServerFetch";
 
 export const ShoppingListContext = createContext(null);
 
 function ShoppingListProvider({ children }) {
-  const [query, setQuery] = useState("");
+  //const [query, setQuery] = useState("");
   const [shoppingList, setShoppingList] = useState([]);
-  const { data, error, loading } = useSearchInfo(query);
+  //const { data, error, loading } = useSearchInfo(query);
+  const { searchIngredientInfo, addIngredient, removeIngredient, editIngredient, addIngredientBySpoonId: addBySpoonId } = useServerFetch();
 
   const addItem = useCallback(
-    (ingredient) => {
-      setShoppingList((curr) => [...curr, ingredient]);
+    async (ingredient) => {
+      const res = await addIngredient(ingredient.ingredient_id, ingredient.amount);
+      if (res.data.success) {
+        setShoppingList((curr) => [...curr, ingredient]);
+      }
     },
     [shoppingList]
   );
 
   const removeItem = useCallback(
-    (id) => {
-      setShoppingList((curr) => curr.filter((val) => id !== val.id));
+    async (id) => {
+      const res = await removeIngredient(id);
+      if (res.data.success) {
+        setShoppingList((curr) => curr.filter((val) => id !== val.id));
+      }
     },
     [shoppingList]
   );
@@ -32,38 +40,43 @@ function ShoppingListProvider({ children }) {
     [shoppingList]
   );
 
-  const addItemById = useCallback((id) => {
-    setQuery("food/ingredients/" + id + "/information?amount=1");
-  }, []);
+  const addItemById = useCallback(async(id, item) => {
+    const res = await addBySpoonId(id, item.ingredient_id)
+    if(res.data.success){
+      setShoppingList((curr) => [...curr, res.data.data])
+    }
+  }, [shoppingList]);
 
-  const changeItemAmount = useCallback((amount, id) => {
-    const index = getItemIndex(id)
-  if(index >= 0){
-      let newObj = shoppingList[index]
-      newObj.amount = amount
-      if(newObj.amount <= 0){
-        setShoppingList(curr => [...curr.slice(0, index), ...curr.slice(index+1)])
-      }else{
-          setShoppingList(curr => [...curr.slice(0, index), newObj, ...curr.slice(index+1)])
-      }
-  }
-}, [shoppingList])
-
-const getItemIndex = useCallback((id) => {
-    for(let i = 0; i < shoppingList.length; i++){
-        if(shoppingList[i].id === id){
-            return i
+  const changeItemAmount = useCallback(
+    async (amount, id) => {
+      const res = await editIngredient(id, amount);
+      if (res.data.success) {
+        const index = getItemIndex(id);
+        if (index >= 0) {
+          let newObj = shoppingList[index];
+          newObj.amount = amount;
+          if (newObj.amount <= 0) {
+            setShoppingList((curr) => [...curr.slice(0, index), ...curr.slice(index + 1)]);
+          } else {
+            setShoppingList((curr) => [...curr.slice(0, index), newObj, ...curr.slice(index + 1)]);
+          }
         }
-    }
-    return -1
-}, [shoppingList])
+      }
+    },
+    [shoppingList]
+  );
 
-
-  useEffect(() => {
-    if (data) {
-      setShoppingList((curr) => [...curr, data]);
-    }
-  }, [data]);
+  const getItemIndex = useCallback(
+    (id) => {
+      for (let i = 0; i < shoppingList.length; i++) {
+        if (shoppingList[i].id === id) {
+          return i;
+        }
+      }
+      return -1;
+    },
+    [shoppingList]
+  );
 
   return (
     <ShoppingListContext.Provider

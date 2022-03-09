@@ -43,16 +43,16 @@ let b = [
 ];
 
 let cc = {
-  "id": 7,
-  "ingredient_id": 7,
-  "user_id": 1,
-  "amount": 5,
-  "on_shopping_list": 0,
-  "spoon_id": 1123,
-  "name": "egg",
-  "image": "egg.png",
-  "aisle": "Milk, Eggs, Other Dairy"
-}
+  id: 7,
+  ingredient_id: 7,
+  user_id: 1,
+  amount: 5,
+  on_shopping_list: 0,
+  spoon_id: 1123,
+  name: "egg",
+  image: "egg.png",
+  aisle: "Milk, Eggs, Other Dairy",
+};
 
 const Item = styled.div`
   display: flex;
@@ -85,33 +85,18 @@ const NameCon = styled.div`
 
 const baseUrl = "https://spoonacular.com/cdn/ingredients_100x100/";
 function IngredientDisplay({ item }) {
-  const { userId } = useContext(UserContext);
   const { changeIngredientAmount } = useContext(PantryContext);
-  const [query, setQuery] = useState(null);
-  const { data, error, loading } = useServerFetch(
-    "patch",
-    "/pantry/editIngredient",
-    { ingredient_id: item.id, user_id: userId, amount: item.amount },
-    {}
-  );
-
   return (
     <Item>
       <div>
         <button
-          onClick={() =>
-            setQuery({
-              ingredient_id: item.id,
-              user_id: userId,
-              amount: item.amount - 1,
-            })
-          }
+          onClick={() => changeIngredientAmount(item.ingredient_id, item.amount - 1)}
         >
           -
         </button>
         <span>{item.amount}</span>
         <button
-          onClick={() => changeIngredientAmount(item.amount + 1, item.id)}
+          onClick={() => changeIngredientAmount(item.ingredient_id, item.amount + 1)}
         >
           +
         </button>

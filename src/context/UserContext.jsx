@@ -4,17 +4,13 @@ import useServerFetch from "../hooks/useServerFetch";
 export const UserContext = createContext(null);
 
 function UserProvider(props) {
-  const [userId, setUserId] = useState(null)
   const [user, setUser] = useState(null);
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const [uError, setUError] = useState(null);
   const [pError, setPError] = useState(null);
   const [showError, setShowError] = useState(false);
-  const [queryUserName, setQueryUserName] = useState(null)
-  const [queryPassword, setQueryPassword] = useState(null)
-  const [query, setQuery] = useState(null)
-  const { data, error, loading } = useServerFetch("post", "/users/login", null, {username: queryUserName, password: queryPassword})
+  const { login: apiLogin, logout: apiLogout } = useServerFetch()
 
   useEffect(() => {
     if (userName.length < 4 || userName.length > 10) {
@@ -29,40 +25,36 @@ function UserProvider(props) {
     }
   }, [userName, password]);
 
-  const login = useCallback( (e) => {
+  const login = useCallback( async (e) => {
       e.preventDefault()
     if (!showError) {
       setShowError(true);
     }
     if (!uError && !pError) {
-      setQueryUserName(userName)
-      setQueryPassword(password)
-      setPassword("")
+      const res = await apiLogin(userName, password)
+      console.log(res)
+      if(res.data.success){
+        setUser(userName)
+        setUserName("")
+        setPassword("")
+      }
     }
     return false;
   }, [uError, pError, userName, password, showError]);
 
-  useEffect(() => {
-    if(data){
-      if(data.username && data.id){
-        setUser(data.username)
-        setUserId(data.id)
-        setUserName("")
-        setPassword("")
-        setShowError(false)
+  const logout = useCallback( async() => {
+      const res = await apiLogout()
+      if(res.data.success){
+        setUser(null)
+        // TODO will need to clear recipes, pantry and shopping list also maybe settings
       }
-    }
-  }, [data])
-
-  const logout = useCallback(() => {
-      setUser(null)
-      setUserId(null)
   }, [])
 
   return (
     <UserContext.Provider
       value={{
         user,
+        setUser,
         userName,
         setUserName,
         password,
@@ -72,7 +64,6 @@ function UserProvider(props) {
         showError,
         login,
         logout,
-        userId
       }}
     >
       {props.children}

@@ -1,5 +1,6 @@
 import React, { createContext, useCallback, useEffect, useState } from "react";
 import useSearch from "../hooks/useSearch";
+import useServerFetch from "../hooks/useServerFetch";
 
 export const SearchContext = createContext(null);
 
@@ -34,8 +35,8 @@ function SearchProvider({ children }) {
 
   const submitSearch = useCallback(async () => {
     const res = await searchRecipe(search);
-    if (res.success) {
-      setResults(res.data);
+    if (res.data.success) {
+      setResults(res.data.data);
       setTotalResults(0);
       setNumber(0);
       setOffset(0);

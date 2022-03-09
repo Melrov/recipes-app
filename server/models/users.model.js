@@ -1,5 +1,6 @@
 const query = require("../config/mysql.config");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken")
 
 
 /**
@@ -16,9 +17,14 @@ async function login(res, username, password) {
     ]);
     if (user) {
       if (await bcrypt.compare(password, user.password)) {
-        return res.send({
+        const token = jwt.sign({ id: user.id }, process.env.SECRET_KEY);
+        return res
+        .cookie("access_token", token, {
+          httpOnly: true,
+        })
+        .send({
           success: true,
-          data: { id: user.id, username: user.username },
+          data: user.username,
           error: null,
         });
       } else {

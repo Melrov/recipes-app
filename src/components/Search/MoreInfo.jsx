@@ -1004,14 +1004,23 @@ function MoreInfo() {
   const [query, setQuery] = useState(null);
   const { id } = useParams();
   //const { data, error, loading } = useSearchInfo("recipes/" + id + "/information");
-  const { data, error, loading } = useServerFetch("get", `/recipe/${id}`, null, {});
+  const { recipeById } = useServerFetch();
   const { addRecipe, removeRecipe, isInRecipes } = useContext(RecipesContext)
+  const [data, setData] = useState(null)
 
   useEffect(() => {
-    if (id) {
-      setQuery("recipes/" + id + "/information");
+    async function init(){
+      const res = await recipeById(id)
+      console.log(res)
+      if(res.data.success){
+        setData(res.data.data)
+      }
     }
-  }, [id]);
+    if (id) {
+      init()
+    }
+  }, []);
+
 
   function recipeClick() {
     console.log('ran')
@@ -1038,22 +1047,23 @@ function MoreInfo() {
               } per serving`}</span>
             </div>
             <div>
-              <span>{`${data.aggregateLikes} likes`}</span>
+              <span>{`${data.spoon_likes} likes`}</span>
             </div>
             <div>
-              <span>{`Ready in ${data.readyInMinutes} minutes`}</span>
+              <span>{`Ready in ${data.ready_in} minutes`}</span>
             </div>
             <div>
-              <span>{`Spoonacular Score ${data.spoonacularScore}%`}</span>
+              <span>{`Spoonacular Score ${data.score}%`}</span>
             </div>
           </InfoCon>
-          <Ingredients serving={data.servings} ingredients={data.extendedIngredients}/>
+          <Ingredients recipe_id={data.id} serving={data.servings} ingredients={data.extendedIngredients}/>
           <div dangerouslySetInnerHTML={{ __html: data.summary }}></div>
           <div>
             <h3>instructions</h3>
 
+            <div dangerouslySetInnerHTML={{ __html: data.instructions }}></div>
             <p>
-              {data.instructions + " Read the detailed instructions on "}{" "}
+              {" Read the detailed instructions on "}{" "}
               <a href={data.sourceUrl}>{data.creditsText}</a>
             </p>
           </div>

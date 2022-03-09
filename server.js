@@ -1,6 +1,9 @@
 require('dotenv').config()
 const express = require("express")
+const cors = require("cors")
 const cookieparser = require("cookie-parser")
+
+const passport = require("./server/config/passport.config")
 
 const favoritesRoutes = require("./server/routes/favorites.routes")
 const pantryRoutes = require("./server/routes/pantry.routes")
@@ -11,15 +14,17 @@ const usersRoutes = require("./server/routes/users.routes")
 const app = express()
 const SERVER_PORT = process.env.SERVER_PORT || 8080
 
+app.use(cors())
 app.use(express.json())
 app.use(express.static(__dirname + "/build"))
-app.use()
+app.use(cookieparser())
+app.use(passport.initialize())
 
-app.use("/favorites", favoritesRoutes)
-app.use("/pantry", pantryRoutes)
-app.use("/recipes", recipesRoutes)
-app.use("/search", searchRoutes)
-app.use("/users", usersRoutes)
+app.use("/api/favorites", favoritesRoutes)
+app.use("/api/pantry", pantryRoutes)
+app.use("/api/recipes", recipesRoutes)
+app.use("/api/search", searchRoutes)
+app.use("/api/users", usersRoutes)
 
 app.get("*", (req, res) => {
     //return res.send({ success: false });

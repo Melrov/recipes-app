@@ -338,7 +338,7 @@ const ItemName = styled.span`
 `;
 
 const baseUrl = "https://spoonacular.com/cdn/ingredients_100x100/";
-function Ingredients({ serving, ingredients }) {
+function Ingredients({ recipe_id, serving, ingredients }) {
     const [query, setQuery] = useState("")
     const [open, setOpen] = useState(false);
   const [servings, setServings] = useState(serving);
@@ -367,16 +367,16 @@ function Ingredients({ serving, ingredients }) {
         {ingredients.map((item) => {
           return (
             <Item
-              key={item.id}
-              style={{ backgroundColor: isInPantry(item.id) ? "green" : "red" }}
+              key={item.ingredient_id}
+              style={{ backgroundColor: isInPantry(item.ingredient_id) ? "green" : "red" }}
             >
-              {!isInPantry(item.id) && (
+              {!isInPantry(item.ingredient_id) && (
                 <>
-                  <button onClick={() => addIngredientById(item.id)}>
+                  <button onClick={() => addIngredientById(recipe_id, item)}>
                     Add to Pantry
                   </button>
-                  {!isInShoppingList(item.id) && (<> 
-                    <button onClick={() => addItemById(item.id)}>Add to ShoppingList</button>
+                  {!isInShoppingList(item.ingredient_id) && (<> 
+                    <button onClick={() => addItemById(item.ingredient_id)}>Add to ShoppingList</button>
                     { !isInSubstitutes(item.name) && <button onClick={() => findSubstitute(item.name)}>Find Substitute</button>}
                   </>
                   )}
@@ -384,8 +384,8 @@ function Ingredients({ serving, ingredients }) {
               )}
               <Img src={baseUrl + item.image} />
               <ItemName>{item.name}</ItemName>
-              <span>{`${(item.measures["us"].amount * servings) / serving} ${
-                item.measures["us"].unitLong
+              <span>{`${(item.amount * servings) / serving} ${
+                item.unit
               }`}</span>
               { isInSubstitutes(item.name) && <span>{getSubstitute(item.name)}</span>}
             </Item>

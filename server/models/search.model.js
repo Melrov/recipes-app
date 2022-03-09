@@ -3,10 +3,7 @@ const apiCall = require("../api/api");
 
 async function searchRecipeById(res, spoonId) {
   try {
-    const apiRes = await apiCall(
-      `https://api.spoonacular.com/recipes/${spoonId}/information`,
-      {}
-    ); //this will get the recipe then if not null add it to the database and return it
+    const apiRes = await apiCall(`https://api.spoonacular.com/recipes/${spoonId}/information`, {}); //this will get the recipe then if not null add it to the database and return it
     if (!apiRes.success) {
       return res.send({ success: false, data: null, error: "api call error" });
     }
@@ -31,49 +28,43 @@ async function searchRecipeById(res, spoonId) {
       spoon_url: apiRes.data.spoonacularSourceUrl,
     };
 
-    const { insertId: recipe_id } = await query("INSERT INTO recipes SET ?", [
-      newRecipe,
-    ]);
+    const { insertId: recipe_id } = await query("INSERT INTO recipes SET ?", [newRecipe]);
 
     apiRes.data.extendedIngredients.forEach(async (ingredient) => {
-      const [check] = await query(
-        "SELECT * FROM ingredients WHERE ingredients.spoon_id = ?",
-        [ingredient.id]
-      );
-      let ingredient_id;
-      if (!check) {
-        const { insertId } = await query(
-          `INSERT INTO ingredients
+      if (ingredient.id) {
+        //console.log(ingredient)
+        const [check] = await query("SELECT * FROM ingredients WHERE ingredients.spoon_id = ?", [ingredient.id]);
+        let ingredient_id;
+        if (!check) {
+          const { insertId } = await query(
+            `INSERT INTO ingredients
                        (spoon_id, name, image, aisle)
                        VALUES (?, ?, ?, ?)`,
-          [
-            ingredient.id,
-            ingredient.nameClean,
-            ingredient.image,
-            ingredient.aisle,
-          ]
-        );
-        ingredient_id = insertId;
-      } else {
-        ingredient_id = check.id;
-      }
-      await query(
-        `INSERT INTO recipe_ingredient
+            [ingredient.id, ingredient.nameClean, ingredient.image, ingredient.aisle]
+          );
+          ingredient_id = insertId;
+        } else {
+          ingredient_id = check.id;
+        }
+        await query(
+          `INSERT INTO recipe_ingredient
                    (ingredient_id, amount, original, consistency, recipe_id, unit)
                    VALUES (? ,?, ?, ? ,?, ?)`,
-        [
-          ingredient_id,
-          ingredient.amount,
-          ingredient.original,
-          ingredient.consistency,
-          recipe_id,
-          ingredient.unit,
-        ]
-      );
+          [ingredient_id, ingredient.amount, ingredient.original, ingredient.consistency, recipe_id, ingredient.unit]
+        );
+      }
     });
-    return res.send({ success: true, data: Object.assign(apiRes.data, {id: recipe_id}), error: null });
+    const [recipe_return] = await query("SELECT * FROM recipes WHERE recipes.id = ?", [recipe_id]);
+    const recipe_ingredients = await query(
+      "SELECT image, ingredient_id, amount, original, consistency, recipe_id, unit, name FROM ingredients JOIN recipe_ingredient ON ingredients.id = recipe_ingredient.ingredient_id WHERE recipe_ingredient.recipe_id = ?",
+      [recipe_id]
+    );
+    const retRecipe = Object.assign(recipe_return, {
+      extendedIngredients: recipe_ingredients,
+    });
+    return res.send({ success: true, data: retRecipe, error: null });
   } catch (error) {
-    console.log(error)
+    console.log(error);
     return res.send({
       success: false,
       data: null,
@@ -84,10 +75,7 @@ async function searchRecipeById(res, spoonId) {
 
 async function ingredientSearch(res, query) {
   try {
-    const apiRes = await apiCall(
-      `https://api.spoonacular.com/food/ingredients/search`,
-      { query }
-    );
+    const apiRes = await apiCall(`https://api.spoonacular.com/food/ingredients/search`, { query });
     return res.send({ success: true, data: apiRes.data, error: null });
   } catch (error) {
     return res.send({
@@ -100,22 +88,23 @@ async function ingredientSearch(res, query) {
 
 async function singleIngredientSearch(res, spoon_id, user_id) {
   try {
-    const { ingredient } = await query(
+    const [pantry_ingredient] = await query(
       "SELECT * FROM pantry WHERE pantry.ingredient_id = ? AND pantry.user_id = ?",
       [spoon_id, user_id]
     );
-    if (ingredient) {
+    if (pantry_ingredient) {
       return res.send({
         success: false,
         data: null,
         error: "Already in your pantry.",
       });
     }
-
-    const apiRes = await apiCall(
-      `https://api.spoonacular.com/food/ingredients/${spoon_id}/information?amount=1`,
-      {}
-    );
+    const [ingredient] = await query("SELECT * FROM ingredients WHERE ingredients.spoon_id = ?", [spoon_id]);
+    if (ingredient) {
+      return res.send({ success: true, data: ingredient, error: null });
+    }
+    console.log(ingredient, spoon_id);
+    const apiRes = await apiCall(`https://api.spoonacular.com/food/ingredients/${spoon_id}/information?amount=1`, {});
     return res.send({ success: true, data: apiRes.data, error: null });
   } catch (error) {
     return res.send({
@@ -129,12 +118,10 @@ async function singleIngredientSearch(res, spoon_id, user_id) {
 async function searchRecipe(res, query) {
   try {
     //get settings
-    const apiRes = await apiCall(
-      "https://api.spoonacular.com/recipes/complexSearch",
-      { query }
-    );
+    const apiRes = await apiCall("https://api.spoonacular.com/recipes/complexSearch", { query });
     return res.send({ success: true, data: apiRes.data, error: null });
   } catch (error) {
+    console.log(error);
     return res.send({
       success: true,
       data: null,

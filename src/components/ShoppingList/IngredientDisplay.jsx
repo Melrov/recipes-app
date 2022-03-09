@@ -77,12 +77,12 @@ function IngredientDisplay({ item }) {
   return (
     <Item>
     <div>
-      <button onClick={() => changeItemAmount(item.amount-1, item.id)}>-</button>
+      <button onClick={() => changeItemAmount(item.ingredient_id, item.amount-1)}>-</button>
       <span>{item.amount}</span>
-      <button onClick={() => changeItemAmount(item.amount+1, item.id)}>+</button>
+      <button onClick={() => changeItemAmount(item.ingredient_id, item.amount+1)}>+</button>
     </div>
     <div>
-      <button onClick={() => {addIngredient(item); removeItem(item.id)}} >Add to Pantry</button>
+      <button onClick={() => {addIngredient(item); removeItem(item.ingredient_id)}} >Add to Pantry</button>
     </div>
       <ImgCon>
         <Img src={baseUrl + item.image} />

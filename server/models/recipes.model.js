@@ -9,7 +9,7 @@ async function getRecipeBySpoonId(res, spoonId) {
     );
     if (recipe) {
       const recipe_ingredients = await query(
-        "SELECT * FROM recipe_ingredient WHERE recipe_ingredient.recipe_id = ?",
+        "SELECT image, ingredient_id, amount, original, consistency, recipe_id, unit, name FROM ingredients JOIN recipe_ingredient ON ingredients.id = recipe_ingredient.ingredient_id WHERE recipe_ingredient.recipe_id = ?",
         [recipe.id]
       );
       const retRecipe = Object.assign(recipe, {

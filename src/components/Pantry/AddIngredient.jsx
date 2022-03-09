@@ -1,4 +1,4 @@
-import React, { useState, useContext, useCallback } from "react";
+import React, { useState, useContext, useCallback, useEffect } from "react";
 import styled from "styled-components";
 import Icon from "@mui/material/Icon";
 import IconButton from "@mui/material/IconButton";
@@ -20,17 +20,28 @@ const AddButtonR = styled.div`
 `;
 
 function AddIngredient({ data, setShowNew }) {
-  const [item, setItem] = useState(Object.assign({}, data))
+  console.log(data);
+  const [item, setItem] = useState(null);
   //const [customName, setCustomName] = useState(false);
-  const { ingredients, isInPantry, addIngredient, changeIngredientAmount } =
-    useContext(PantryContext);
-
+  const {
+    ingredients,
+    isInPantry,
+    addIngredient,
+    changeIngredientAmount,
+    addIngredientBySpoonId,
+  } = useContext(PantryContext);
+  
+  useEffect(() => {
+    setItem(Object.assign({ amount: 1 }, data));
+  }, [data]);
 
   return (
-    <div>
-      <img src={baseUrl + data.image} />
-      <span>{data.nameClean ? data.nameClean : data.name}</span>
-      {/* <input
+    <>
+      {item && (
+        <div>
+          <img src={baseUrl + data.image} />
+          <span>{data.nameClean ? data.nameClean : data.name}</span>
+          {/* <input
         type="checkbox"
         name="check"
         onClick={() => setCustomName(!customName)}
@@ -41,25 +52,39 @@ function AddIngredient({ data, setShowNew }) {
           <input type="text" />
         </div>
       )} */}
-      <div>
-      <button onClick={() => setItem(curr => ({...curr, amount: curr.amount -1}) )}>-</button>
-      <span>{item.amount}</span>
-      <button onClick={() => setItem(curr => ({...curr, amount: curr.amount +1}) )}>+</button>
-    </div>
-      <IconButton
-        onClick={() => {
-          if(isInPantry(item.id)){
-            changeIngredientAmount(item.amount, item.id)
-          }
-          else{
-            addIngredient(item);
-          }
-          setShowNew(false)
-        }}
-      >
-        <Icon sx={{ fontSize: 25 }}>add_circle</Icon>
-      </IconButton>
-    </div>
+          <div>
+            <button
+              onClick={() =>
+                setItem((curr) => ({ ...curr, amount: curr.amount - 1 }))
+              }
+            >
+              -
+            </button>
+            <span>{item.amount}</span>
+            <button
+              onClick={() =>
+                setItem((curr) => ({ ...curr, amount: curr.amount + 1 }))
+              }
+            >
+              +
+            </button>
+          </div>
+          <IconButton
+            onClick={() => {
+              if (isInPantry(item.id)) {
+                changeIngredientAmount(item.amount, item.id);
+              } else {
+                console.log(item);
+                addIngredientBySpoonId(item);
+              }
+              setShowNew(false);
+            }}
+          >
+            <Icon sx={{ fontSize: 25 }}>add_circle</Icon>
+          </IconButton>
+        </div>
+      )}
+    </>
   );
 }
 

@@ -4,7 +4,7 @@ const query = require('./mysql.config')
 
 const cookieJWTExtractor = (req) => {
     if(req && req.cookies){
-        return req.cookie.access_token
+        return req.cookies.access_token
     }
     return null
 }
@@ -14,12 +14,12 @@ const opts = {
     secretOrKey: process.env.SECRET_KEY,
 }
 
-passport.use(new JwtStrategy(opts, async function(jwt_payload, done) {
+passport.use("jwt", new Strategy(opts, async function(jwt_payload, done) {
     try {
         if(!jwt_payload || !jwt_payload.id){
             return done(null, false, "Invalid Credentials")
         }
-        const [user] = await query("SELECT * FROM users WHERE users.id = ?", [jwt_payload.id])
+        const [user] = await query("SELECT id, username FROM users WHERE users.id = ?", [jwt_payload.id])
         if(!user){
             return done(null, false, "Invalid Credentials")
         }
@@ -28,3 +28,5 @@ passport.use(new JwtStrategy(opts, async function(jwt_payload, done) {
         return done(error)
     }
 }));
+
+module.exports = passport

@@ -5,7 +5,7 @@ function useServerFetch(type, url, query, body) {
 
   const makeAPICall = useCallback(async (url, config) => {
     try {
-      return await axios(url, config);
+      return await axios( url, config);
     } catch (error) {
       return { success: false, data: null, error: "Something went wrong." };
     }
@@ -13,9 +13,7 @@ function useServerFetch(type, url, query, body) {
 
   const login = useCallback(async (username, password) => {
     return await makeAPICall("/api/users/login", {
-      headers: {
-        type: "post",
-      },
+      method: "post",
       data: {
         username,
         password,
@@ -23,109 +21,115 @@ function useServerFetch(type, url, query, body) {
     });
   }, []);
 
-  const addFav = useCallback(async (user_id, recipe_id) => {
+  const logout = useCallback(async (username, password) => {
+    return await makeAPICall("/api/users/logout", {
+      method: "get",
+    });
+  }, []);
+
+  const verify = useCallback(async (username, password) => {
+    return await makeAPICall("/api/users/verify", {
+      method: "get",
+    });
+  }, []);
+
+  const addFav = useCallback(async (recipe_id) => {
     return await makeAPICall("/api/favorites/addFav", {
-      headers: {
-        type: "put",
-      },
+      method: "put",
       data: {
-        user_id,
         recipe_id,
       },
     });
   }, []);
 
-  const removeFav = useCallback(async (user_id, recipe_id) => {
+  const removeFav = useCallback(async (recipe_id) => {
     return await makeAPICall("/api/favorites/removeFav", {
-      headers: {
-        type: "delete",
-      },
+      method: "delete",
       data: {
-        user_id,
         recipe_id,
       },
     });
   }, []);
 
-  const favsByUserId = useCallback(async (user_id) => {
-    return await makeAPICall(`/api/favorites/${user_id}`, {
-      headers: {
-        type: "get",
-      },
+  const favsByUserId = useCallback(async () => {
+    return await makeAPICall('/api/favorites/', {
+      method: "get",
     });
   }, []);
 
-  const addIngredient = useCallback(async (user_id, ingredient_id, amount) => {
+  const addIngredient = useCallback(async (ingredient_id, amount) => {
     return await makeAPICall("/api/pantry/addIngredient", {
-      headers: {
-        type: "put",
-      },
+      method: "put",
       data: {
-        user_id,
         ingredient_id,
         amount
       },
     });
   }, []);
 
-  const editIngredient = useCallback(async (user_id, ingredient_id, amount) => {
+  const addIngredientBySpoonId = useCallback(async (ingredient) => {
+    return await makeAPICall("/api/pantry/addIngredientBySpoonId", {
+      method: "put",
+      data: {
+        pantry: {
+          amount: ingredient.amount
+        },
+        ingredient: {
+          spoon_id: ingredient.id,
+          name: ingredient.original || ingredient.name,
+          image: ingredient.image,
+          aisle: ingredient.aisle
+        }
+      },
+    });
+  }, []);
+
+
+
+  const editIngredient = useCallback(async (ingredient_id, amount) => {
     return await makeAPICall("/api/pantry/editIngredient", {
-      headers: {
-        type: "patch",
-      },
+      method: "patch",
       data: {
-        user_id,
         ingredient_id,
         amount
       },
     });
   }, []);
 
-  const removeIngredient = useCallback(async (user_id, ingredient_id) => {
+  const removeIngredient = useCallback(async (ingredient_id) => {
     return await makeAPICall("/api/pantry/removeIngredient", {
-      headers: {
-        type: "delete",
-      },
+      method: "delete",
       data: {
-        user_id,
         ingredient_id,
       },
     });
   }, []);
 
-  const pantryByUserId = useCallback(async (user_id) => {
-    return await makeAPICall(`/api/pantry/${user_id}`, {
-      headers: {
-        type: "get",
-      },
+  const pantryByUserId = useCallback(async () => {
+    return await makeAPICall('/api/pantry/', {
+      method: "get",
     });
   }, []);
 
-  const shoppingListByUserId = useCallback(async (user_id) => {
-    return await makeAPICall(`/api/pantry/shoppingList/${user_id}`, {
-      headers: {
-        type: "get",
-      },
+  const shoppingListByUserId = useCallback(async () => {
+    return await makeAPICall('/api/pantry/shoppingList/', {
+      method: "get",
     });
   }, []);
 
   const recipeById = useCallback(async (spoon_id) => {
-    return await makeAPICall(`/recipes/${spoon_id}`, {
-      headers: {
-        type: "get",
-      },
+    return await makeAPICall(`/api/recipes/${spoon_id}`, {
+      method: "get",
     });
   }, []);
 
-  const addIngredientByRecipeId = useCallback(async (recipe_id, ingredient_id, user_id, on_shopping_list = false) => {
-    return await makeAPICall('/addByRecipe_id', {
-      headers: {
-        type: "put",
-      },
-      params: {
+  const addIngredientByRecipeId = useCallback(async (recipe_id, ingredient_id, on_shopping_list = false) => {
+    console.log(ingredient_id)
+    return await makeAPICall('/api/pantry/addByRecipe_id', {
+      method: "put",
+      data: {
         recipe_id,
         ingredient_id,
-        user_id,
         on_shopping_list
       }
     });
@@ -137,10 +141,8 @@ function useServerFetch(type, url, query, body) {
    * @returns {} {success, data, error}
    */
   const searchRecipe = useCallback(async (query) => {
-    return await makeAPICall("/search/recipe", {
-      headers: {
-        type: "get",
-      },
+    return await makeAPICall("/api/search/recipes", {
+      method: "get",
       params: {
         query,
       },
@@ -148,34 +150,32 @@ function useServerFetch(type, url, query, body) {
   }, []);
 
   const searchIngredients = useCallback(async (query) => {
-    return await makeAPICall("/search/ingredients", {
-      headers: {
-        type: "get",
-      },
+    return await makeAPICall("/api/search/ingredients", {
+      method: "get",
       params: {
         query,
       },
     });
   }, []);
 
-  const searchIngredientInfo = useCallback(async (spoon_id, user_id) => {
-    return await makeAPICall("/search/ingredientInfo", {
-      headers: {
-        type: "get",
-      },
+  const searchIngredientInfo = useCallback(async (spoon_id) => {
+    return await makeAPICall("/api/search/ingredientInfo", {
+      method: "get",
       params: {
         spoon_id,
-        user_id,
       },
     });
   }, []);
 
   return {
     login,
+    logout,
+    verify,
     addFav,
     removeFav,
     favsByUserId,
     addIngredient,
+    addIngredientBySpoonId,
     removeIngredient,
     editIngredient,
     pantryByUserId,

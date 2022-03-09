@@ -235,35 +235,22 @@ const example = {
 };
 
 function PantryProvider({ children }) {
-  const { userId } = useContext(UserContext);
   const [ingredients, setIngredients] = useState([]);
   const [query, setQuery] = useState("");
   const [queryUrl, setQueryUrl] = useState(null);
   const [queryType, setQueryType] = useState(null);
   //const { data, error, loading } = useSearchInfo(query)
   //const [query, setQuery] = useState(null)
-  const { data, error, loading } = useServerFetch(
-    "put",
-    "/api/pantry/addFav",
-    {},
-    query
-  );
-  const { reload, setReload } = useState(null);
-  const {
-    data: pantryData,
-    error: pantryError,
-    loading: pantryLoading,
-  } = useServerFetch("get", `api/pantry/${userId}`, reload, {});
   const { addItem } = useContext(ShoppingListContext);
   const [lastItem, setLastItem] = useState(null);
 
-  const { addIngredient: add, removeIngredient: remove, editIngredient: edit, pantryByUserId: byId, addIngredientByRecipeId: addByRecipeId } =
+  const { addIngredient: add, removeIngredient: remove, editIngredient: edit, pantryByUserId: byId, addIngredientByRecipeId: addByRecipeId, addIngredientBySpoonId: addBySpoonId } =
     useServerFetch();
 
   const getIngredientIndex = useCallback(
-    (id) => {
+    (ingredient_id) => {
       for (let i = 0; i < ingredients.length; i++) {
-        if (ingredients[i].id === id) {
+        if (ingredients[i].ingredient_id === ingredient_id) {
           return i;
         }
       }
@@ -273,8 +260,8 @@ function PantryProvider({ children }) {
   );
 
   const isInPantry = useCallback(
-    (id) => {
-      if (getIngredientIndex(id) >= 0) {
+    (ingredient_id) => {
+      if (getIngredientIndex(ingredient_id) >= 0) {
         return true;
       }
       return false;
@@ -282,34 +269,49 @@ function PantryProvider({ children }) {
     [ingredients]
   );
 
+
+
   const addIngredient = useCallback(async (ingredient) => {
-    const res = await add(userId, ingredient.id, ingredient.amount)
-    if(res.success){
+    const res = await add(ingredient.id, ingredient.amount)
+    if(res.data.success){
         setIngredients((curr) => [...curr, ingredient])
     }
   }, [ingredients]);
 
+  const addIngredientBySpoonId = useCallback(async (ingredient) => {
+    const res = await addBySpoonId(ingredient)
+    console.log(res)
+    if(res.data.success){
+        setIngredients((curr) => [...curr, res.data.data])
+    }
+  }, [ingredients]);
 
-  const addIngredientById = useCallback(async(id) => {
-    const res = await addByRecipeId()
+
+  const addIngredientById = useCallback(async(recipe_id, ingredient) => {
+    console.log(ingredient)
+    const res = await addByRecipeId(recipe_id, ingredient.ingredient_id)
+    console.log(res, recipe_id, ingredient)
+    if(res.data.success){
+      setIngredients((curr) => [...curr, res.data.data])
+    }
   }, []);
 
 
   const changeIngredientAmount = useCallback(
-    async (amount, id) => {
-        const res = await edit(userId, id, amount)
-        if(res.success){
-            const index = getIngredientIndex(id)
+    async (ingredient_id, amount) => {
+        const res = await edit(ingredient_id, amount)
+        if(res.data.success){
+            const index = getIngredientIndex(ingredient_id)
             if(index >= 0){
-                let newObj = ingredients[index]
+                let newObj = {...ingredients[index]}
                 newObj.amount = amount
-                if(newObj.amount <= 0){
-                    addItem(ingredients[index])
-                    setIngredients(curr => [...curr.slice(0, index), ...curr.slice(index+1)])
-                }
-                else{
+                // if(newObj.amount <= 0){
+                //     addItem(ingredients[index])
+                //     setIngredients(curr => [...curr.slice(0, index), ...curr.slice(index+1)])
+                // }
+                //else{
                     setIngredients(curr => [...curr.slice(0, index), newObj, ...curr.slice(index+1)])
-                }
+                //}
             }
         }
     },
@@ -325,6 +327,8 @@ function PantryProvider({ children }) {
         addIngredient,
         changeIngredientAmount,
         addIngredientById,
+        setIngredients,
+        addIngredientBySpoonId
       }}
     >
       {children}

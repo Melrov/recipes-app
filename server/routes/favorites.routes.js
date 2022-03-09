@@ -1,26 +1,39 @@
-const express = require("express")
-const { addFavorite, removeFavorite, getUserFavorites } = require("../models/favorites.model")
-const router = express.Router()
+const express = require("express");
+const authenticate = require("../middleware/authenticate.middleware");
+const {
+  addFavorite,
+  removeFavorite,
+  getUserFavorites,
+} = require("../models/favorites.model");
+const router = express.Router();
 
-router.post('/addFav', (req, res) => {
-    if(req.query.user_id && req.query.recipe_id){
-        addFavorite(res, req.query.user_id, req.query.recipe_id)
-    }
-    return res.send({success: false, data: null, error: "Please give a user_id and recipe_id"})
-})
+router.use(authenticate);
 
-router.delete('/removeFav', (req, res) => {
-    if(req.query.user_id && req.query.recipe_id){
-        removeFavorite(res, req.query.user_id, req.query.recipe_id)
-    }
-    return res.send({success: false, data: null, error: "Please give a user_id and recipe_id"})
-})
+router.put("/addFav", (req, res) => {
+  console.log(req.body)
+  if (!req.body.recipe_id) {
+    return res.send({
+      success: false,
+      data: null,
+      error: "Please give a user_id and recipe_id",
+    });
+  }
+  addFavorite(res, req.user.id, req.body.recipe_id);
+});
 
-router.get('/:user_id', (req, res) => {
-    if(req.params.user_id){
-        getUserFavorites(res, req.params.user_id)
-    }
-    return res.send({success: false, data: null, error: "Please give a user_id"})
-})
+router.delete("/removeFav", (req, res) => {
+  if (req.query.recipe_id) {
+    removeFavorite(res, req.user.id, req.query.recipe_id);
+  }
+  return res.send({
+    success: false,
+    data: null,
+    error: "Please give a recipe_id",
+  });
+});
 
-module.exports = router
+router.get("/", (req, res) => {
+  getUserFavorites(res, req.user.id);
+});
+
+module.exports = router;

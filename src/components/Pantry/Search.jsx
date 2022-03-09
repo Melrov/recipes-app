@@ -336,23 +336,14 @@ const Result = styled.div`
 const baseUrl = "https://spoonacular.com/cdn/ingredients_100x100/";
 
 function Search() {
+  const { searchIngredients, searchIngredientInfo } = useServerFetch();
   const [query, setQuery] = useState("");
+  const [queryData, setQueryData] = useState(null)
   const [singleQuery, setSingleQuery] = useState("");
+  const [singleQueryData, setSingleQueryData] = useState(null)
   const [showResults, setShowResults] = useState(null);
   const [search, setSearch] = useState("");
-  //const { data, error, loading } = useFetch("food/ingredients/search", query);
-  const { data, error, loading } = useServerFetch("get", "api/ingredients", {query}, {});
   const [showNew, setShowNew] = useState(false)
-  // const {
-  //   data: singleData,
-  //   error: singleError,
-  //   loading: singleLoading,
-  // } = useSearchInfo(singleQuery);
-  const {
-    data: singleData,
-    error: singleError,
-    loading: singleLoading,
-  } = useServerFetch("get", "api/search/ingredientInfo", { query: singleQuery }, {});
   const [typing, setTyping] = useState(false);
   const [typingTimeout, setTypingTimeout] = useState(null);
 
@@ -370,6 +361,30 @@ function Search() {
 
     return () => clearTimeout(delayDebounceFn);
   }, [search]);
+
+  useEffect(() => {
+    async function init(){
+      const res = await searchIngredients(query)
+      if(res.data.success){
+        setQueryData(res.data.data)
+      }
+    }
+    if(query){
+      init()
+    }
+  }, [query])
+
+  useEffect(() => {
+    async function init(){
+      const res = await searchIngredientInfo(singleQuery)
+      if(res.data.success){
+        setSingleQueryData(res.data.data)
+      }
+    }
+    if(singleQuery){
+      init()
+    }
+  }, [singleQuery])
 
   return (
     <>
@@ -398,16 +413,16 @@ function Search() {
           </IconButton>
         )}
       </Paper>
-      { showNew && singleData &&<AddIngredient data={singleData} setShowNew={setShowNew} /> }
-      {showResults && data &&(
+      { showNew && singleQueryData &&<AddIngredient data={singleQueryData} setShowNew={setShowNew} /> }
+      {showResults && queryData &&(
         <ResultsCon>
-          {data.results.map((item) => {
+          {queryData.results.map((item) => {
             return (
               <Result
                 key={item.id}
                 onClick={() => {
                   setShowResults(false);
-                  setSingleQuery("food/ingredients/" + item.id + "/information?amount=1");
+                  setSingleQuery(item.id);
                   setShowNew(true)
                 }}
               >
