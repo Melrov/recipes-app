@@ -32,5 +32,5 @@ app.get("*", (req, res) => {
   });
 
 app.listen(SERVER_PORT, ()=> {
-    console.log(`Example app listening on port ${SERVER_PORT}!`);
+    console.log(`Example app listening on port ${PORT}!`);
 })
