@@ -95,15 +95,15 @@ function Search() {
             <SearchIcon />
           </IconButton>
         </Paper>
-        <IconButton
+        {/* <IconButton
           onClick={() => {
             setShowSettings(!showSettings);
           }}
         >
           <Settings fontSize="small" />
-        </IconButton>
+        </IconButton> */}
       </SearchCon>
-      {showSettings && (
+      {/* {showSettings && (
         <SettingsCon>
           <Checkbox
             checked={instructionsRequired}
@@ -135,7 +135,7 @@ function Search() {
           />
           <label htmlFor="Nutrition">Use the nutrition you set</label>
         </SettingsCon>
-      )}
+      )} */}
       {results && <SearchResults data={results} />}
     </div>
   );

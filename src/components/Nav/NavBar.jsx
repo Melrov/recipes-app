@@ -84,7 +84,7 @@ export default function NavBar() {
               Pantry
             </NavLink>
           </ListItem>
-          <ListItem>
+          {/* <ListItem>
             <NavLink
               to="/shoppinglist"
               style={({ isActive }) =>
@@ -93,7 +93,7 @@ export default function NavBar() {
             >
               Shopping List
             </NavLink>
-          </ListItem>
+          </ListItem> */}
           </> }
         </List>
         {/* <Box sx={{ p: 3 }} /> */}
@@ -152,12 +152,12 @@ export default function NavBar() {
           <Avatar /> My account
         </MenuItem>
         <Divider /> */}
-        <MenuItem onClick={() => navigate('/settings')}>
+        {/* <MenuItem onClick={() => navigate('/settings')}>
           <ListItemIcon>
             <Settings fontSize="small" />
           </ListItemIcon>
           Settings
-        </MenuItem>
+        </MenuItem> */}
         <MenuItem onClick={() => logout()}>
           <ListItemIcon>
             <Logout fontSize="small" />

@@ -375,11 +375,11 @@ function Ingredients({ recipe_id, serving, ingredients }) {
                   <button onClick={() => addIngredientById(recipe_id, item)}>
                     Add to Pantry
                   </button>
-                  {!isInShoppingList(item.ingredient_id) && (<> 
+                  {/* {!isInShoppingList(item.ingredient_id) && (<> 
                     <button onClick={() => addItemById(item.ingredient_id)}>Add to ShoppingList</button>
                     { !isInSubstitutes(item.name) && <button onClick={() => findSubstitute(item.name)}>Find Substitute</button>}
                   </>
-                  )}
+                  )} */}
                 </>
               )}
               <Img src={baseUrl + item.image} />

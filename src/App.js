@@ -23,8 +23,8 @@ function App() {
   const [querry, setQuerry] = useState(null);
   const { user, setUser } = useContext(UserContext);
   const { setIngredients } = useContext(PantryContext);
-  const { setResults, setSearch } = useContext(SearchContext)
-  const { setRecipes } = useContext(RecipesContext)
+  const { setResults, setSearch } = useContext(SearchContext);
+  const { setRecipes } = useContext(RecipesContext);
   const { pantryByUserId, verify, favsByUserId } = useServerFetch();
 
   useEffect(() => {
@@ -33,17 +33,17 @@ function App() {
       if (res.data.success) {
         setIngredients(res.data.data);
       }
-      const newRes = await favsByUserId()
-      if(res.data.success){
-        setRecipes(newRes.data.data)
+      const newRes = await favsByUserId();
+      if (res.data.success) {
+        setRecipes(newRes.data.data);
       }
     }
     if (user) {
       init();
-    }else{
-      setIngredients([])
-      setResults(null)
-      setSearch("")
+    } else {
+      setIngredients([]);
+      setResults(null);
+      setSearch("");
     }
   }, [user]);
 
@@ -54,8 +54,8 @@ function App() {
         setUser(res.data.data.username);
       }
     }
-      init();
-  }, [])
+    init();
+  }, []);
 
   return (
     <Router>
@@ -78,7 +78,7 @@ function App() {
             </ProtectedRoutes>
           }
         />
-        <Route
+        {/* <Route
           path="/settings"
           element={
             <ProtectedRoutes isPrivate={true}>
@@ -93,7 +93,7 @@ function App() {
               <Diet />
             </ProtectedRoutes>
           }
-        />
+        /> */}
         <Route
           path="/search/:id"
           element={
@@ -118,14 +118,14 @@ function App() {
             </ProtectedRoutes>
           }
         />
-        <Route
+        {/* <Route
           path="/shoppinglist"
           element={
             <ProtectedRoutes isPrivate={true}>
               <ShoppingList />
             </ProtectedRoutes>
           }
-        />
+        /> */}
       </Routes>
     </Router>
   );
