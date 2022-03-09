@@ -31,6 +31,6 @@ app.get("*", (req, res) => {
     return res.sendFile("/build/index.html", {root: __dirname + "/"})
   });
 
-app.listen(SERVER_PORT, ()=> {
+app.listen(PORT, ()=> {
     console.log(`Example app listening on port ${PORT}!`);
 })
