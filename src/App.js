@@ -18,6 +18,7 @@ import { PantryContext } from "./context/PantryContext";
 import useServerFetch from "./hooks/useServerFetch";
 import { SearchContext } from "./context/SearchContext";
 import { RecipesContext } from "./context/RecipesContext";
+import Signup from "./components/SignUp";
 
 function App() {
   const [querry, setQuerry] = useState(null);
@@ -75,6 +76,14 @@ function App() {
           element={
             <ProtectedRoutes isPrivate={false}>
               <Login></Login>
+            </ProtectedRoutes>
+          }
+        />
+        <Route
+          path="/signup"
+          element={
+            <ProtectedRoutes isPrivate={false}>
+              <Signup />
             </ProtectedRoutes>
           }
         />

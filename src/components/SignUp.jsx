@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Checkbox from "@mui/material/Checkbox";
@@ -9,6 +9,7 @@ import IconButton from "@mui/material/IconButton";
 import { styled as muiStyled } from '@mui/material/styles';
 import { UserContext } from "../context/UserContext";
 import styled from "styled-components";
+import useServerFetch from "../hooks/useServerFetch";
 import { useNavigate } from "react-router-dom";
 
 const Con = styled.div`
@@ -45,22 +46,58 @@ const SubmitButton = styled(Button)({
     }
 })
 
-function Login() {
-  const {
-    userName,
-    setUserName,
-    password,
-    setPassword,
-    uError,
-    pError,
-    showError,
-    login,
-  } = useContext(UserContext);
-  const navigate = useNavigate()
+function SignUp() {
+    const [userName, setUserName] = useState("")
+    const [password, setPassword] = useState("")
+    const [secondPassword, setSecondPassword] = useState("")
+    const [uError, setUError] = useState(null)
+    const [pError, setPError] = useState(null)
+    const [spError, setSpError] = useState(null)
+    const [showError, setShowError] = useState(false)
+    const { signup: apiSignUp } = useServerFetch()
+    const navigate = useNavigate()
+
+    useEffect(() => {
+        if (userName.length < 4 || userName.length > 10) {
+          setUError("Mush be between 4 and 10 characters");
+        } else {
+          setUError(null);
+        }
+        if (password.length < 4 || password.length > 10) {
+          setPError("Mush be between 4 and 10 characters");
+        } else {
+          setPError(null);
+        }
+      }, [userName, password]);
+
+    useEffect(() => {
+        if(password !== secondPassword){
+            setSpError("Password does not match")
+        }
+        else {
+            setSpError(null)
+        }
+    }, [password, secondPassword])
+
+    const signup = useCallback(async(e) => {
+        e.preventDefault()
+        if(!uError && ! pError && ! spError){
+            const res = await apiSignUp(userName, password)
+            console.log(res)
+            if(res.data.success){
+                navigate('/login')
+            }
+            else{
+                setShowError(true)
+            }
+        }
+        setShowError(true)
+    }, [])
+
   return (
     <Con>
-      <Form onSubmit={login}>
-        <Header>Login</Header>
+      <Form onSubmit={signup}>
+        <Header>Sign Up</Header>
         <InputCon>
           <TextField
             style={{ width: "250px" }}
@@ -86,18 +123,24 @@ function Login() {
           />
         </InputCon>
 
-        <CheckBoxCon>
-          <FormControlLabel control={<Checkbox />} label="Remember Me" />
-        </CheckBoxCon>
+        <InputCon>
+          <TextField
+            style={{ width: "250px" }}
+            error={!!spError}
+            type="password"
+            label="Password"
+            value={secondPassword}
+            helperText={!!spError ? spError : ""}
+            onChange={(e) => setSecondPassword(e.target.value)}
+          />
+        </InputCon>
+
         <SubmitButton variant="contained" type="submit">
-          Login
+          Sign Up
         </SubmitButton>
       </Form>
-      <h2 onClick={() => {navigate("/signup")}}>
-        Sign UP
-      </h2>
     </Con>
   );
 }
 
-export default Login;
+export default SignUp;
