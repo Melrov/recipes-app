@@ -12,7 +12,7 @@ const searchRoutes = require("./server/routes/search.routes")
 const usersRoutes = require("./server/routes/users.routes")
 
 const app = express()
-const PORT = process.env.SERVER_PORT || 8080
+const PORT = process.env.PORT || 8080
 
 app.use(cors())
 app.use(express.json())
