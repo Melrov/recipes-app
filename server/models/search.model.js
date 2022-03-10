@@ -19,7 +19,7 @@ async function searchRecipeById(res, spoonId) {
       spoon_likes: apiRes.data.aggregateLike || 0,
       likes: 0,
       source_name: apiRes.data.sourceName,
-      instructions: apiRes.data.instructions,
+      instructions: apiRes.data.instructions || "",
       vegetarian: apiRes.data.vegetarian || false,
       vegan: apiRes.data.vegan || false,
       gluten_free: apiRes.data.glutenFree || false,
