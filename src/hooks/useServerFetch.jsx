@@ -123,11 +123,11 @@ function useServerFetch(type, url, query, body) {
     return await makeAPICall("/api/shoppingList/addIngredientBySpoonId", {
       method: "put",
       data: {
-        pantry: {
+        shopping_list: {
           amount: ingredient.amount
         },
         ingredient: {
-          spoon_id: ingredient.id,
+          spoon_id: ingredient.spoon_id,
           name: ingredient.original || ingredient.name,
           image: ingredient.image,
           aisle: ingredient.aisle,

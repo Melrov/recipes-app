@@ -26,7 +26,7 @@ function Recipes({data}) {
         <>
           { recipes && <CardCon>
             {recipes.map((item) => {
-              return <ResultCard key={item.id} item={item} />;
+              return <ResultCard key={item.recipe_id} item={item} />;
             })}
             {recipes.length === 0 && <span>No saved Recipes <Redirect onClick={() => navigate('/search')}>Click to find Recipes</Redirect></span>}
           </CardCon> }

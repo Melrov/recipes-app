@@ -37,7 +37,8 @@ function PantryProvider({ children }) {
 
   const addIngredient = useCallback(
     async (ingredient) => {
-      const res = await add(ingredient.id, ingredient.amount);
+      const res = await add(ingredient.ingredient_id, 1);
+      console.log(res, ingredient)
       if (res.data.success) {
         setIngredients((curr) => [...curr, ingredient]);
       }

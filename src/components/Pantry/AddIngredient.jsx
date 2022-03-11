@@ -33,6 +33,7 @@ function AddIngredient({ data, setShowNew }) {
   
   useEffect(() => {
     setItem(Object.assign({ amount: 1 }, data));
+    setShowNew(true)
   }, [data]);
 
   return (

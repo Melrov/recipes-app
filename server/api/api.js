@@ -13,7 +13,7 @@ async function apiCall(url, inputParams = {}) {
     //maybe later try changing all ids from res to spoon_id
     //let modifiedRes = {...res}
     //modifiedRes.spoon_id = res.id
-    console.log(res.data)
+    console.log(res.data.image)
     return {success: true, data: res.data, error: null}
   } catch (error) {
       console.log(error)

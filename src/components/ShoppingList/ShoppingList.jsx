@@ -308,7 +308,7 @@ function ShoppingList() {
         <Search />
       <IngredCon>
             {shoppingList.map((item) => {
-                return <IngredientDisplay key={item.id} item={item}/>
+                return <IngredientDisplay key={item.ingredient_id} item={item}/>
             })}
         </IngredCon>
     </div>

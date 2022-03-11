@@ -11,7 +11,7 @@ async function searchRecipeById(res, spoonId) {
     const newRecipe = {
       title: apiRes.data.title,
       spoon_id: apiRes.data.id,
-      image: apiRes.data.image,
+      image: apiRes.data.image || `https://spoonacular.com/recipeImages/${apiRes.data.id}-556x370.jpg`,
       summary: apiRes.data.summary,
       ready_in: apiRes.data.readyInMinutes || 0,
       score: apiRes.data.spoonacularScore,
@@ -30,31 +30,8 @@ async function searchRecipeById(res, spoonId) {
 
     const { insertId: recipe_id } = await query("INSERT INTO recipes SET ?", [newRecipe]);
 
-    apiRes.data.extendedIngredients.forEach(async (ingredient) => {
-      if (ingredient.id) {
-        //console.log(ingredient)
-        const [check] = await query("SELECT * FROM ingredients WHERE ingredients.spoon_id = ?", [ingredient.id]);
-        let ingredient_id;
-        if (!check) {
-          const { insertId } = await query(
-            `INSERT INTO ingredients
-                       (spoon_id, name, image, aisle)
-                       VALUES (?, ?, ?, ?)`,
-            [ingredient.id, ingredient.nameClean, ingredient.image, ingredient.aisle]
-          );
-          ingredient_id = insertId;
-        } else {
-          ingredient_id = check.id;
-        }
-        await query(
-          `INSERT INTO recipe_ingredient
-           (ingredient_id, amount, original, consistency, recipe_id, unit)
-           VALUES (? ,?, ?, ? ,?, ?)`,
-          [ingredient_id, ingredient.amount, ingredient.original, ingredient.consistency, recipe_id, ingredient.unit]
-        );
-      }
-    });
-    const [recipe_return] = await query("SELECT * FROM recipes WHERE recipes.id = ?", [recipe_id]);
+    await insertIngredients(apiRes.data.extendedIngredients, recipe_id)
+    
     const recipe_ingredients = await query(
       `SELECT image, ingredient_id, amount, original, consistency, recipe_id, unit, name
        FROM ingredients JOIN recipe_ingredient
@@ -62,7 +39,8 @@ async function searchRecipeById(res, spoonId) {
        WHERE recipe_ingredient.recipe_id = ?`,
       [recipe_id]
     );
-    const retRecipe = Object.assign(recipe_return, {
+    console.log(recipe_ingredients, recipe_id)
+    const retRecipe = await Object.assign({...newRecipe, recipe_id }, {
       extendedIngredients: recipe_ingredients,
     });
     return res.send({ success: true, data: retRecipe, error: null });
@@ -75,6 +53,34 @@ async function searchRecipeById(res, spoonId) {
     });
   }
 }
+
+async function insertIngredients(ingredients, recipe_id){
+  for(let i = 0; i < ingredients.length; i++){
+      //console.log(ingredient)
+      if(ingredients[i].id){
+      const [check] = await query("SELECT * FROM ingredients WHERE ingredients.spoon_id = ?", [ingredients[i].id]);
+      let ingredient_id;
+      if (!check) {
+        const { insertId } = await query(
+          `INSERT INTO ingredients
+           (spoon_id, name, image, aisle)
+           VALUES (?, ?, ?, ?)`,
+          [ingredients[i].id, ingredients[i].nameClean, ingredients[i].image, ingredients[i].aisle]
+        );
+        ingredient_id = insertId;
+      } else {
+        ingredient_id = check.id;
+      }
+      await query(
+        `INSERT INTO recipe_ingredient
+         (ingredient_id, amount, original, consistency, recipe_id, unit)
+         VALUES (? ,?, ?, ? ,?, ?)`,
+        [ingredient_id, ingredients[i].amount, ingredients[i].original, ingredients[i].consistency, recipe_id, ingredients[i].unit]
+      );
+      }
+  }
+}
+
 
 async function ingredientSearch(res, query) {
   try {
@@ -94,17 +100,6 @@ async function ingredientSearch(res, query) {
 
 async function singleIngredientSearch(res, spoon_id, user_id) {
   try {
-    const [pantry_ingredient] = await query("SELECT * FROM pantry WHERE pantry.ingredient_id = ? AND pantry.user_id = ?", [
-      spoon_id,
-      user_id,
-    ]);
-    if (pantry_ingredient) {
-      return res.send({
-        success: false,
-        data: null,
-        error: "Already in your pantry.",
-      });
-    }
     const [ingredient] = await query(
       `SELECT id as ingredient_id, spoon_id, name, image, aisle
        FROM ingredients WHERE ingredients.spoon_id = ?`,
@@ -116,7 +111,7 @@ async function singleIngredientSearch(res, spoon_id, user_id) {
     console.log(ingredient, spoon_id);
     const apiRes = await apiCall(`https://api.spoonacular.com/food/ingredients/${spoon_id}/information?amount=1`, {});
     const fixedRes = {
-      ingredient_id: apiRes.data.id,
+      spoon_id: apiRes.data.id,
       name: apiRes.data.name,
       image: apiRes.data.image,
       aisle: apiRes.data.aisle,

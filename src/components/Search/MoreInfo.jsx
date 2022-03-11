@@ -1024,11 +1024,11 @@ function MoreInfo() {
 
   function recipeClick() {
     console.log('ran')
-    if(!isInRecipes(data.id)){
+    if(!isInRecipes(data.recipe_id)){
       addRecipe(data)
     }
     else{
-      removeRecipe(data.id)
+      removeRecipe(data.recipe_id)
     }
   }
 
@@ -1039,7 +1039,7 @@ function MoreInfo() {
         <>
           <h2>{data.title}</h2>
           <img src={data.image} />
-          <button onClick={() => recipeClick()}>{isInRecipes(data.id) ? "Remove from Recipes" : "Add to Recipes"}</button>
+          <button onClick={() => recipeClick()}>{isInRecipes(data.recipe_id) ? "Remove from Recipes" : "Add to Recipes"}</button>
           <InfoCon>
             <div>
               <span>{`$${

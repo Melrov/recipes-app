@@ -72,18 +72,27 @@ const NameCon = styled.div`
 
 const baseUrl = "https://spoonacular.com/cdn/ingredients_100x100/";
 function IngredientDisplay({ item }) {
-  const { changeItemAmount, removeItem } = useContext(ShoppingListContext)
-  const { addIngredient } = useContext(PantryContext)
+  const { changeItemAmount, removeItem } = useContext(ShoppingListContext);
+  const { addIngredient, isInPantry } = useContext(PantryContext);
   return (
     <Item>
-    <div>
-      <button onClick={() => changeItemAmount(item.ingredient_id, item.amount-1)}>-</button>
-      <span>{item.amount}</span>
-      <button onClick={() => changeItemAmount(item.ingredient_id, item.amount+1)}>+</button>
-    </div>
-    <div>
-      <button onClick={() => {addIngredient(item); removeItem(item.ingredient_id)}} >Add to Pantry</button>
-    </div>
+      <div>
+        <button onClick={() => changeItemAmount(item.ingredient_id, item.amount - 1)}>-</button>
+        <span>{item.amount}</span>
+        <button onClick={() => changeItemAmount(item.ingredient_id, item.amount + 1)}>+</button>
+      </div>
+      {!isInPantry(item.ingredient_id) && (
+        <div>
+          <button
+            onClick={() => {
+              addIngredient(item);
+              //removeItem(item.ingredient_id);
+            }}
+          >
+            Add to Pantry
+          </button>
+        </div>
+      )}
       <ImgCon>
         <Img src={baseUrl + item.image} />
       </ImgCon>

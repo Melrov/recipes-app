@@ -20,18 +20,26 @@ const AddButtonR = styled.div`
   height: 10px;
 `;
 
-function AddIngredient({ data, setShowNew }) {
+function AddIngredient({ data, setShowNew, showNew }) {
   const [item, setItem] = useState(null);
   //const [customName, setCustomName] = useState(false);
-  const { shoppingList, addItem, isInShoppingList, changeItemAmount } =
+  const { shoppingList, addItemById, isInShoppingList, changeItemAmount } =
     useContext(ShoppingListContext);
 
   useEffect(() => {
     setItem(Object.assign({ amount: 1 }, data));
+    setShowNew(true)
   }, [data]);
 
+  useEffect(() => {
+    if( item && isInShoppingList(item.ingredient_id)){
+      setShowNew(false)
+    }
+  }, [isInShoppingList])
+
   return (
-    <div>
+    <>
+    { showNew && item && <div>
       <img src={baseUrl + data.image} />
       {/* <span>{data.nameClean ? data.nameClean : data.name}</span>
       <input
@@ -64,17 +72,13 @@ function AddIngredient({ data, setShowNew }) {
       </div>
       <IconButton
         onClick={() => {
-          if (isInShoppingList(item.id)) {
-            changeItemAmount(item.amount, item.id);
-          } else {
-            addItem(item);
-          }
-          setShowNew(false);
+            addItemById(item);
         }}
       >
         <Icon sx={{ fontSize: 25 }}>add_circle</Icon>
       </IconButton>
-    </div>
+    </div> }
+    </>
   );
 }
 
