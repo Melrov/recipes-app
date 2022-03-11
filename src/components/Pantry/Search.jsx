@@ -365,6 +365,7 @@ function Search() {
   useEffect(() => {
     async function init(){
       const res = await searchIngredients(query)
+      console.log(res)
       if(res.data.success){
         setQueryData(res.data.data)
       }
@@ -416,13 +417,13 @@ function Search() {
       { showNew && singleQueryData &&<AddIngredient data={singleQueryData} setShowNew={setShowNew} /> }
       {showResults && queryData &&(
         <ResultsCon>
-          {queryData.results.map((item) => {
+          {queryData.map((item) => {
             return (
               <Result
                 key={item.id}
                 onClick={() => {
                   setShowResults(false);
-                  setSingleQuery(item.id);
+                  setSingleQuery(item.ingredient_id);
                   setShowNew(true)
                 }}
               >

@@ -18,14 +18,16 @@ import { PantryContext } from "./context/PantryContext";
 import useServerFetch from "./hooks/useServerFetch";
 import { SearchContext } from "./context/SearchContext";
 import { RecipesContext } from "./context/RecipesContext";
+import { ShoppingListContext } from "./context/ShoppingContex";
 
 function App() {
   const [querry, setQuerry] = useState(null);
   const { user, setUser } = useContext(UserContext);
   const { setIngredients } = useContext(PantryContext);
+  const { setShoppingList } = useContext(ShoppingListContext);
   const { setResults, setSearch } = useContext(SearchContext)
   const { setRecipes } = useContext(RecipesContext)
-  const { pantryByUserId, verify, favsByUserId } = useServerFetch();
+  const { pantryByUserId, verify, favsByUserId, shoppingListByUserId } = useServerFetch();
 
   useEffect(() => {
     async function init() {
@@ -34,8 +36,12 @@ function App() {
         setIngredients(res.data.data);
       }
       const newRes = await favsByUserId()
-      if(res.data.success){
+      if(newRes.data.success){
         setRecipes(newRes.data.data)
+      }
+      const newNewRes = await shoppingListByUserId()
+      if(newNewRes.data.success){
+        setShoppingList(newNewRes.data.data)
       }
     }
     if (user) {

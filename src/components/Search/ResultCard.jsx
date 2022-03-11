@@ -43,7 +43,7 @@ const Title = styled.h3`
 function ResultCard({ item }) {
   const navigate = useNavigate()
   return (
-    <Card onClick={() => navigate("/search/" + item.id)}>
+    <Card onClick={() => navigate("/search/" + item.spoon_id)}>
       <Img src={item.image}></Img>
       <TitleCon>
         <Title>{item.title}</Title>

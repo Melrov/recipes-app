@@ -3,10 +3,10 @@ const {
   addIngredient,
   removeIngredient,
   editIngredient,
-  getUserPantry,
+  getUserShoppingList,
   addByRecipeId,
   addIngredientBySpoonId,
-} = require("../models/pantry.model");
+} = require("../models/shoppinglist.model");
 const authenticate = require("../middleware/authenticate.middleware");
 const router = express.Router();
 
@@ -70,7 +70,7 @@ router.patch("/editIngredient", (req, res) => {
 });
 
 router.get("/", (req, res) => {
-  getUserPantry(res, req.user.id);
+  getUserShoppingList(res, req.user.id);
 });
 
 router.put("/addByRecipe_id", (req, res) => {

@@ -1056,7 +1056,7 @@ function MoreInfo() {
               <span>{`Spoonacular Score ${data.score}%`}</span>
             </div>
           </InfoCon>
-          <Ingredients recipe_id={data.id} serving={data.servings} ingredients={data.extendedIngredients}/>
+          <Ingredients recipe_id={data.recipe_id} serving={data.servings} ingredients={data.extendedIngredients}/>
           <div dangerouslySetInnerHTML={{ __html: data.summary }}></div>
           <div>
             <h3>instructions</h3>

@@ -376,7 +376,7 @@ function Ingredients({ recipe_id, serving, ingredients }) {
                     Add to Pantry
                   </button>
                   {!isInShoppingList(item.ingredient_id) && (<> 
-                    <button onClick={() => addItemById(item.ingredient_id)}>Add to ShoppingList</button>
+                    <button onClick={() => addItemById(item)}>Add to ShoppingList</button>
                     { !isInSubstitutes(item.name) && <button onClick={() => findSubstitute(item.name)}>Find Substitute</button>}
                   </>
                   )}

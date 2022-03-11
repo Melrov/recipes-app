@@ -36,7 +36,10 @@ async function removeFavorite(res, userId, recipeId) {
 async function getUserFavorites(res, user_id) {
   try {
     const favorites = await query(
-      "SELECT * FROM favorites JOIN recipes ON favorites.recipe_id = recipes.id WHERE favorites.user_id = ?",
+      `SELECT recipe_id, title, spoon_id, image
+       FROM favorites JOIN recipes 
+       ON favorites.recipe_id = recipes.id
+       WHERE favorites.user_id = ?`,
       [user_id]
     );
     return res.send({ success: true, data: favorites, error: null });

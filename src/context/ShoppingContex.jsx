@@ -8,11 +8,11 @@ function ShoppingListProvider({ children }) {
   //const [query, setQuery] = useState("");
   const [shoppingList, setShoppingList] = useState([]);
   //const { data, error, loading } = useSearchInfo(query);
-  const { searchIngredientInfo, addIngredient, removeIngredient, editIngredient, addIngredientBySpoonId: addBySpoonId } = useServerFetch();
+  const { searchIngredientInfo, addIngredientShopping, removeIngredientShopping, editIngredientShopping, addIngredientBySpoonIdShopping } = useServerFetch();
 
   const addItem = useCallback(
     async (ingredient) => {
-      const res = await addIngredient(ingredient.ingredient_id, ingredient.amount);
+      const res = await addIngredientShopping(ingredient.ingredient_id, ingredient.amount);
       if (res.data.success) {
         setShoppingList((curr) => [...curr, ingredient]);
       }
@@ -22,7 +22,7 @@ function ShoppingListProvider({ children }) {
 
   const removeItem = useCallback(
     async (id) => {
-      const res = await removeIngredient(id);
+      const res = await removeIngredientShopping(id);
       if (res.data.success) {
         setShoppingList((curr) => curr.filter((val) => id !== val.id));
       }
@@ -31,8 +31,8 @@ function ShoppingListProvider({ children }) {
   );
 
   const isInShoppingList = useCallback(
-    (id) => {
-      if (shoppingList.filter((val) => id === val.id).length > 0) {
+    (ingredient_id) => {
+      if (shoppingList.filter((val) => ingredient_id === val.ingredient_id).length > 0) {
         return true;
       }
       return false;
@@ -40,16 +40,18 @@ function ShoppingListProvider({ children }) {
     [shoppingList]
   );
 
-  const addItemById = useCallback(async(id, item) => {
-    const res = await addBySpoonId(id, item.ingredient_id)
+  const addItemById = useCallback(async(item) => {
+    console.log(item)
+    const res = await addIngredientShopping(item.ingredient_id, 1)
+    console.log(res)
     if(res.data.success){
-      setShoppingList((curr) => [...curr, res.data.data])
+      setShoppingList((curr) => [...curr, {...item, amount: 1}])
     }
   }, [shoppingList]);
 
   const changeItemAmount = useCallback(
     async (amount, id) => {
-      const res = await editIngredient(id, amount);
+      const res = await editIngredientShopping(id, amount);
       if (res.data.success) {
         const index = getItemIndex(id);
         if (index >= 0) {
@@ -82,6 +84,7 @@ function ShoppingListProvider({ children }) {
     <ShoppingListContext.Provider
       value={{
         shoppingList,
+        setShoppingList,
         addItem,
         removeItem,
         isInShoppingList,
