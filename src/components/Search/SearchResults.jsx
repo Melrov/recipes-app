@@ -16,7 +16,7 @@ function SearchResults({ data }) {
     <>
       { data && <CardCon>
         {data.results.map((item) => {
-          return <ResultCard key={item.id} item={item} />;
+          return <ResultCard key={item.recipe_id} item={item} />;
         })}
         {data.length === 0 && <span>No results</span>}
       </CardCon> }

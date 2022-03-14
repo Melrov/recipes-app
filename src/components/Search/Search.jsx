@@ -137,6 +137,7 @@ function Search() {
         </SettingsCon>
       )} */}
       {results && <SearchResults data={results} />}
+      {results && results.results.length === 0 && <p>No results found.</p>}
     </div>
   );
 }

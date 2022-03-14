@@ -3,10 +3,10 @@ const {
   addIngredient,
   removeIngredient,
   editIngredient,
-  getUserPantry,
+  getUserShoppingList,
   addByRecipeId,
   addIngredientBySpoonId,
-} = require("../models/pantry.model");
+} = require("../models/shoppinglist.model");
 const authenticate = require("../middleware/authenticate.middleware");
 const router = express.Router();
 
@@ -30,8 +30,8 @@ router.put("/addIngredient", (req, res) => {
 router.put("/addIngredientBySpoonId", (req, res) => {
   console.log(req.body);
   if (
-    !req.body.pantry ||
-    !req.body.pantry.amount ||
+    !req.body.shopping_list ||
+    !req.body.shopping_list.amount ||
     !req.body.ingredient ||
     !req.body.ingredient.spoon_id ||
     !req.body.ingredient.name ||
@@ -44,7 +44,7 @@ router.put("/addIngredientBySpoonId", (req, res) => {
       error: "Invalid data provided",
     });
   }
-  addIngredientBySpoonId(res, { ...req.body.pantry, user_id: req.user.id }, { ...req.body.ingredient });
+  addIngredientBySpoonId(res, { ...req.body.shopping_list, user_id: req.user.id }, { ...req.body.ingredient });
 });
 
 router.delete("/removeIngredient", (req, res) => {
@@ -59,7 +59,7 @@ router.delete("/removeIngredient", (req, res) => {
 });
 
 router.patch("/editIngredient", (req, res) => {
-  if (!req.body.ingredient_id || !req.body.amount) {
+  if (!req.body.ingredient_id || isNaN(req.body.amount)) {
     return res.send({
       success: false,
       data: null,
@@ -70,7 +70,7 @@ router.patch("/editIngredient", (req, res) => {
 });
 
 router.get("/", (req, res) => {
-  getUserPantry(res, req.user.id);
+  getUserShoppingList(res, req.user.id);
 });
 
 router.put("/addByRecipe_id", (req, res) => {

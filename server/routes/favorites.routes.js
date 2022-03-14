@@ -22,14 +22,14 @@ router.put("/addFav", (req, res) => {
 });
 
 router.delete("/removeFav", (req, res) => {
-  if (req.query.recipe_id) {
-    removeFavorite(res, req.user.id, req.query.recipe_id);
+  if (!req.body.recipe_id) {
+    return res.send({
+      success: false,
+      data: null,
+      error: "Please give a recipe_id",
+    });
   }
-  return res.send({
-    success: false,
-    data: null,
-    error: "Please give a recipe_id",
-  });
+  removeFavorite(res, req.user.id, req.body.recipe_id);
 });
 
 router.get("/", (req, res) => {

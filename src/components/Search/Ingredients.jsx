@@ -342,8 +342,8 @@ function Ingredients({ recipe_id, serving, ingredients }) {
     const [query, setQuery] = useState("")
     const [open, setOpen] = useState(false);
   const [servings, setServings] = useState(serving);
-  const { isInPantry, addIngredientById } = useContext(PantryContext);
-  const { isInShoppingList, addItemById } = useContext(ShoppingListContext);
+  const { isInPantry, addIngredient } = useContext(PantryContext);
+  const { isInShoppingList, addItem } = useContext(ShoppingListContext);
   const { isInSubstitutes, substitutes, getSubstitute } = useContext(RecipesContext)
   const {data, error, loading } = useIngredSearch('food/ingredients/substitutes', query)
 
@@ -372,7 +372,7 @@ function Ingredients({ recipe_id, serving, ingredients }) {
             >
               {!isInPantry(item.ingredient_id) && (
                 <>
-                  <button onClick={() => addIngredientById(recipe_id, item)}>
+                  <button onClick={() => addIngredient(item)}>
                     Add to Pantry
                   </button>
                   {/* {!isInShoppingList(item.ingredient_id) && (<> 

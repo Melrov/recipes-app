@@ -3,44 +3,6 @@ import styled from "styled-components";
 import { PantryContext } from "../../context/PantryContext";
 import { ShoppingListContext } from "../../context/ShoppingContex";
 
-let a = {
-  aisle: "Pasta and Rice",
-  amount: 0.25,
-  consitency: "solid",
-  id: 99025,
-  image: "breadcrumbs.jpg",
-  measures: {
-    metric: {
-      amount: 59.147,
-      unitLong: "milliliters",
-      unitShort: "ml",
-    },
-    us: {
-      amount: 0.25,
-      unitLong: "cups",
-      unitShort: "cups",
-    },
-  },
-  meta: ["whole wheat", "(I used panko)"],
-  name: "whole wheat bread crumbs",
-  original: "1/4 cup whole wheat bread crumbs (I used panko)",
-  originalName: "whole wheat bread crumbs (I used panko)",
-  unit: "cup",
-};
-
-let b = [
-  {
-    id: 19400,
-    name: "banana chips",
-    image: "banana-chips.jpg",
-  },
-  {
-    id: 93779,
-    name: "banana liqueur",
-    image: "limoncello.jpg",
-  },
-];
-
 const Item = styled.div`
   display: flex;
   flex-direction: column;
@@ -72,18 +34,45 @@ const NameCon = styled.div`
 
 const baseUrl = "https://spoonacular.com/cdn/ingredients_100x100/";
 function IngredientDisplay({ item }) {
-  const { changeItemAmount, removeItem } = useContext(ShoppingListContext)
-  const { addIngredient } = useContext(PantryContext)
+  const { changeItemAmount, removeItem, addToPantryAndRemove } = useContext(ShoppingListContext);
+  const { addIngredient, isInPantry } = useContext(PantryContext);
   return (
     <Item>
-    <div>
-      <button onClick={() => changeItemAmount(item.ingredient_id, item.amount-1)}>-</button>
-      <span>{item.amount}</span>
-      <button onClick={() => changeItemAmount(item.ingredient_id, item.amount+1)}>+</button>
-    </div>
-    <div>
-      <button onClick={() => {addIngredient(item); removeItem(item.ingredient_id)}} >Add to Pantry</button>
-    </div>
+      <div>
+        <button onClick={() => changeItemAmount(item.ingredient_id, item.amount - 1)}>-</button>
+        <span>{item.amount}</span>
+        <button onClick={() => changeItemAmount(item.ingredient_id, item.amount + 1)}>+</button>
+      </div>
+      <div>
+        {!isInPantry(item.ingredient_id) && (
+          <>
+            <button
+              onClick={() => {
+                addIngredient(item);
+                //removeItem(item.ingredient_id);
+              }}
+            >
+              Add to Pantry
+            </button>
+            <button
+              onClick={() => {
+                addToPantryAndRemove(item);
+                //removeItem(item.ingredient_id);
+              }}
+            >
+              Remove and add to pantry
+            </button>
+          </>
+        )}
+        <button
+          onClick={() => {
+            removeItem(item.ingredient_id);
+            //removeItem(item.ingredient_id);
+          }}
+        >
+          Remove
+        </button>
+      </div>
       <ImgCon>
         <Img src={baseUrl + item.image} />
       </ImgCon>

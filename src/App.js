@@ -18,15 +18,17 @@ import { PantryContext } from "./context/PantryContext";
 import useServerFetch from "./hooks/useServerFetch";
 import { SearchContext } from "./context/SearchContext";
 import { RecipesContext } from "./context/RecipesContext";
-import Signup from "./components/SignUp";
+import { ShoppingListContext } from "./context/ShoppingContext";
+import SignUp from "./components/SignUp";
 
 function App() {
   const [querry, setQuerry] = useState(null);
   const { user, setUser } = useContext(UserContext);
   const { setIngredients } = useContext(PantryContext);
-  const { setResults, setSearch } = useContext(SearchContext);
-  const { setRecipes } = useContext(RecipesContext);
-  const { pantryByUserId, verify, favsByUserId } = useServerFetch();
+  const { setShoppingList } = useContext(ShoppingListContext);
+  const { setResults, setSearch } = useContext(SearchContext)
+  const { setRecipes } = useContext(RecipesContext)
+  const { pantryByUserId, verify, favsByUserId, shoppingListByUserId } = useServerFetch();
 
   useEffect(() => {
     async function init() {
@@ -34,9 +36,13 @@ function App() {
       if (res.data.success) {
         setIngredients(res.data.data);
       }
-      const newRes = await favsByUserId();
-      if (res.data.success) {
-        setRecipes(newRes.data.data);
+      const newRes = await favsByUserId()
+      if(newRes.data.success){
+        setRecipes(newRes.data.data)
+      }
+      const newNewRes = await shoppingListByUserId()
+      if(newNewRes.data.success){
+        setShoppingList(newNewRes.data.data)
       }
     }
     if (user) {
@@ -51,6 +57,7 @@ function App() {
   useEffect(() => {
     async function init() {
       const res = await verify();
+      console.log(res)
       if (res.data.success) {
         setUser(res.data.data.username);
       }
@@ -75,7 +82,15 @@ function App() {
           path="/login"
           element={
             <ProtectedRoutes isPrivate={false}>
-              <Login></Login>
+              <Login/>
+            </ProtectedRoutes>
+          }
+        />
+        <Route
+          path="/signup"
+          element={
+            <ProtectedRoutes isPrivate={false}>
+              <SignUp/>
             </ProtectedRoutes>
           }
         />
@@ -135,6 +150,14 @@ function App() {
             </ProtectedRoutes>
           }
         /> */}
+        <Route
+          path="*"
+          element={
+            <ProtectedRoutes isPrivate={true}>
+              <Recipes />
+            </ProtectedRoutes>
+          }
+        />
       </Routes>
     </Router>
   );

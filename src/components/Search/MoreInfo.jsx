@@ -1024,11 +1024,11 @@ function MoreInfo() {
 
   function recipeClick() {
     console.log('ran')
-    if(!isInRecipes(data.id)){
+    if(!isInRecipes(data.recipe_id)){
       addRecipe(data)
     }
     else{
-      removeRecipe(data.id)
+      removeRecipe(data.recipe_id)
     }
   }
 
@@ -1039,7 +1039,7 @@ function MoreInfo() {
         <>
           <h2>{data.title}</h2>
           <img src={data.image} />
-          <button onClick={() => recipeClick()}>{isInRecipes(data.id) ? "Remove from Recipes" : "Add to Recipes"}</button>
+          <button onClick={() => recipeClick()}>{isInRecipes(data.recipe_id) ? "Remove from Recipes" : "Add to Recipes"}</button>
           <InfoCon>
             <div>
               <span>{`$${
@@ -1056,7 +1056,7 @@ function MoreInfo() {
               <span>{`Spoonacular Score ${data.score}%`}</span>
             </div>
           </InfoCon>
-          <Ingredients recipe_id={data.id} serving={data.servings} ingredients={data.extendedIngredients}/>
+          <Ingredients recipe_id={data.recipe_id} serving={data.servings} ingredients={data.extendedIngredients}/>
           <div dangerouslySetInnerHTML={{ __html: data.summary }}></div>
           <div>
             <h3>instructions</h3>

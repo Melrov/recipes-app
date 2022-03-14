@@ -11,13 +11,13 @@ function PageContext({ children }) {
     <UserProvider>
       <UserDietProvider>
         <SearchProvider>
-          <ShoppingListProvider>
             <PantryProvider>
+          <ShoppingListProvider>
               <RecipesProvider>
                 {children}
               </RecipesProvider>
-            </PantryProvider>
           </ShoppingListProvider>
+            </PantryProvider>
         </SearchProvider>
       </UserDietProvider>
     </UserProvider>

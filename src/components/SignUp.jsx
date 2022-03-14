@@ -45,6 +45,21 @@ const SubmitButton = styled(Button)({
         backgroundColor: "#E16036"
     }
 })
+const Error = styled.p`
+  color: rgb(255 151 151);
+  background: rgb(201 22 22 / 85%);
+  border: 1px solid rgb(239 45 45);
+  padding: 6px;
+  border-radius: 5px;
+`;
+const Register = styled.span`
+  margin: 8px;
+  cursor: pointer;
+  color: rgb(205 66 20 / 73%);
+  &:hover {
+    color: rgb(205 66 20 / 100%);
+  }
+`;
 
 function SignUp() {
     const [userName, setUserName] = useState("")
@@ -54,6 +69,7 @@ function SignUp() {
     const [pError, setPError] = useState(null)
     const [spError, setSpError] = useState(null)
     const [showError, setShowError] = useState(false)
+    const [error, setError] = useState(null)
     const { signup: apiSignUp } = useServerFetch()
     const navigate = useNavigate()
 
@@ -81,7 +97,7 @@ function SignUp() {
 
     const signup = useCallback(async(e) => {
         e.preventDefault()
-        if(!uError && ! pError && ! spError){
+        if(!uError && !pError && !spError){
             const res = await apiSignUp(userName, password)
             console.log(res)
             if(res.data.success){
@@ -89,20 +105,22 @@ function SignUp() {
             }
             else{
                 setShowError(true)
+                setError(res.data.error)
             }
         }
         setShowError(true)
-    }, [])
+    }, [userName, password, uError, pError, spError])
 
   return (
     <Con>
       <Form onSubmit={signup}>
+      {error && <Error>{error}</Error>}
         <Header>Sign Up</Header>
         <InputCon>
           <TextField
             style={{ width: "250px" }}
             error={showError && !!uError}
-            label="User Name"
+            label="Username"
             value={userName}
             helperText={showError ? uError : ""}
             onChange={(e) => setUserName(e.target.value)}
@@ -128,7 +146,7 @@ function SignUp() {
             style={{ width: "250px" }}
             error={!!spError}
             type="password"
-            label="Password"
+            label="Repeat your password"
             value={secondPassword}
             helperText={!!spError ? spError : ""}
             onChange={(e) => setSecondPassword(e.target.value)}
@@ -138,6 +156,9 @@ function SignUp() {
         <SubmitButton variant="contained" type="submit">
           Sign Up
         </SubmitButton>
+        <p>
+        Already have an account? <Register onClick={() => navigate("/login")}>Sign in</Register>
+        </p>
       </Form>
     </Con>
   );

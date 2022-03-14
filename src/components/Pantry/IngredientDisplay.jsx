@@ -1,6 +1,7 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import styled from "styled-components";
 import { PantryContext } from "../../context/PantryContext";
+import { ShoppingListContext } from "../../context/ShoppingContex";
 import { UserContext } from "../../context/UserContext";
 import useServerFetch from "../../hooks/useServerFetch";
 
@@ -85,7 +86,15 @@ const NameCon = styled.div`
 
 const baseUrl = "https://spoonacular.com/cdn/ingredients_100x100/";
 function IngredientDisplay({ item }) {
-  const { changeIngredientAmount } = useContext(PantryContext);
+  const { changeIngredientAmount, removeIngredient } = useContext(PantryContext);
+  const { isInShoppingList, addItem } = useContext(ShoppingListContext)
+
+  const addToShoppingAndRemove = useCallback(async (item) => {
+    const res = await addItem(item)
+    if(res){
+      removeIngredient(item.ingredient_id)
+    }
+  }, [])
   return (
     <Item>
       <div>
@@ -99,6 +108,36 @@ function IngredientDisplay({ item }) {
           onClick={() => changeIngredientAmount(item.ingredient_id, item.amount + 1)}
         >
           +
+        </button>
+      </div>
+      <div>
+        {!isInShoppingList(item.ingredient_id) && (
+          <>
+            <button
+              onClick={() => {
+                addItem(item);
+                //removeItem(item.ingredient_id);
+              }}
+            >
+              Add to Shopping List
+            </button>
+            <button
+              onClick={() => {
+                addToShoppingAndRemove(item);
+                //removeItem(item.ingredient_id);
+              }}
+            >
+              Remove and add to shopping List
+            </button>
+          </>
+        )}
+        <button
+          onClick={() => {
+            removeIngredient(item.ingredient_id);
+            //removeItem(item.ingredient_id);
+          }}
+        >
+          Remove
         </button>
       </div>
       <ImgCon>
