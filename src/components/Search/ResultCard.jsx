@@ -25,7 +25,7 @@ const Img = styled.img`
 const TitleCon = styled.div`
   display: flex;
   align-items: center;
-  background-color: #E16036;
+  background-color: #e16036;
   border-bottom-left-radius: 8px;
   border-bottom-right-radius: 8px;
   padding-right: 5px;
@@ -41,7 +41,7 @@ const Title = styled.h3`
 `;
 
 function ResultCard({ item }) {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   return (
     <Card onClick={() => navigate("/search/" + item.spoon_id)}>
       <Img src={item.image}></Img>

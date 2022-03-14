@@ -51,10 +51,8 @@ const data = [
     },
     meta: ["frozen", "thawed", "cut into bite-sized pieces"],
     name: "cauliflower florets",
-    original:
-      "about 2 cups frozen cauliflower florets, thawed, cut into bite-sized pieces",
-    originalName:
-      "about frozen cauliflower florets, thawed, cut into bite-sized pieces",
+    original: "about 2 cups frozen cauliflower florets, thawed, cut into bite-sized pieces",
+    originalName: "about frozen cauliflower florets, thawed, cut into bite-sized pieces",
     unit: "cups",
   },
   {
@@ -275,45 +273,44 @@ const data = [
   },
 ];
 
-
 const newdaata = [
   {
-      "id": 3,
-      "ingredient_id": 6,
-      "amount": 1,
-      "original": "1 cup Fresh bread crumbs",
-      "consistency": "solid",
-      "recipe_id": 3,
-      "unit": "cup"
+    id: 3,
+    ingredient_id: 6,
+    amount: 1,
+    original: "1 cup Fresh bread crumbs",
+    consistency: "solid",
+    recipe_id: 3,
+    unit: "cup",
   },
   {
-      "id": 4,
-      "ingredient_id": 7,
-      "amount": 4,
-      "original": "4 Eggs",
-      "consistency": "solid",
-      "recipe_id": 3,
-      "unit": ""
+    id: 4,
+    ingredient_id: 7,
+    amount: 4,
+    original: "4 Eggs",
+    consistency: "solid",
+    recipe_id: 3,
+    unit: "",
   },
   {
-      "id": 5,
-      "ingredient_id": 9,
-      "amount": 1,
-      "original": "1 pch Salt",
-      "consistency": "solid",
-      "recipe_id": 3,
-      "unit": ""
+    id: 5,
+    ingredient_id: 9,
+    amount: 1,
+    original: "1 pch Salt",
+    consistency: "solid",
+    recipe_id: 3,
+    unit: "",
   },
   {
-      "id": 6,
-      "ingredient_id": 8,
-      "amount": 1,
-      "original": "1 cup Boiled milk",
-      "consistency": "liquid",
-      "recipe_id": 3,
-      "unit": "cup"
-  }
-]
+    id: 6,
+    ingredient_id: 8,
+    amount: 1,
+    original: "1 cup Boiled milk",
+    consistency: "liquid",
+    recipe_id: 3,
+    unit: "cup",
+  },
+];
 
 const IngredCon = styled.div`
   display: flex;
@@ -339,60 +336,50 @@ const ItemName = styled.span`
 
 const baseUrl = "https://spoonacular.com/cdn/ingredients_100x100/";
 function Ingredients({ recipe_id, serving, ingredients }) {
-    const [query, setQuery] = useState("")
-    const [open, setOpen] = useState(false);
+  const [query, setQuery] = useState("");
+  const [open, setOpen] = useState(false);
   const [servings, setServings] = useState(serving);
   const { isInPantry, addIngredient } = useContext(PantryContext);
   const { isInShoppingList, addItem } = useContext(ShoppingListContext);
-  const { isInSubstitutes, substitutes, getSubstitute } = useContext(RecipesContext)
-  const {data, error, loading } = useIngredSearch('food/ingredients/substitutes', query)
+  const { isInSubstitutes, substitutes, getSubstitute } = useContext(RecipesContext);
+  const { data, error, loading } = useIngredSearch("food/ingredients/substitutes", query);
 
-  const findSubstitute = useCallback((name) => {
-    setQuery(name)
-  }, [])
+  // const findSubstitute = useCallback((name) => {
+  //   setQuery(name)
+  // }, [])
 
   useEffect(() => {
-      if(data){
-          setOpen(true)
-      }
-  }, [data])
+    if (data) {
+      setOpen(true);
+    }
+  }, [data]);
   return (
     <div>
-      <input
-        type="number"
-        value={servings}
-        onChange={(e) => setServings(e.target.value)}
-      />
+      <input type="number" value={servings} onChange={(e) => setServings(e.target.value)} />
       <IngredCon>
         {ingredients.map((item) => {
           return (
-            <Item
-              key={item.ingredient_id}
-              style={{ backgroundColor: isInPantry(item.ingredient_id) ? "green" : "red" }}
-            >
+            <Item key={item.ingredient_id} style={{ backgroundColor: isInPantry(item.ingredient_id) ? "green" : "red" }}>
               {!isInPantry(item.ingredient_id) && (
                 <>
-                  <button onClick={() => addIngredient(item)}>
-                    Add to Pantry
-                  </button>
-                  {/* {!isInShoppingList(item.ingredient_id) && (<> 
-                    <button onClick={() => addItemById(item.ingredient_id)}>Add to ShoppingList</button>
-                    { !isInSubstitutes(item.name) && <button onClick={() => findSubstitute(item.name)}>Find Substitute</button>}
-                  </>
-                  )} */}
+                  <button onClick={() => addIngredient(item)}>Add to Pantry</button>
+                  {!isInShoppingList(item.ingredient_id) && (
+                    <>
+                      <button onClick={() => addItem(item)}>Add to ShoppingList</button>
+                      {/* { !isInSubstitutes(item.name) && <button onClick={() => findSubstitute(item.name)}>Find Substitute</button>} */}
+                    </>
+                  )}
                 </>
               )}
               <Img src={baseUrl + item.image} />
               <ItemName>{item.name}</ItemName>
-              <span>{`${(item.amount * servings) / serving} ${
-                item.unit
-              }`}</span>
-              { isInSubstitutes(item.name) && <span>{getSubstitute(item.name)}</span>}
+              <span>{`${(item.amount * servings) / serving} ${item.unit}`}</span>
+              {/* { isInSubstitutes(item.name) && <span>{getSubstitute(item.name)}</span>} */}
             </Item>
           );
         })}
       </IngredCon>
-      { data && <SubstitutesPopup open={open} setOpen={setOpen} data={data}/> }
+      {data && <SubstitutesPopup open={open} setOpen={setOpen} data={data} />}
     </div>
   );
 }

@@ -104,9 +104,6 @@ function Login() {
           Don't have an account? <Register onClick={() => navigate("/signup")}>Register</Register>
         </p>
       </Form>
-      <h2 onClick={() => {navigate("/signup")}}>
-        Sign UP
-      </h2>
     </Con>
   );
 }

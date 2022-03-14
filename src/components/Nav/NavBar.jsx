@@ -84,7 +84,7 @@ export default function NavBar() {
               Pantry
             </NavLink>
           </ListItem>
-          {/* <ListItem>
+          <ListItem>
             <NavLink
               to="/shoppinglist"
               style={({ isActive }) =>
@@ -93,7 +93,7 @@ export default function NavBar() {
             >
               Shopping List
             </NavLink>
-          </ListItem> */}
+          </ListItem>
           </> }
         </List>
         {/* <Box sx={{ p: 3 }} /> */}

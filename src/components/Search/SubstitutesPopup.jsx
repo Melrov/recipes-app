@@ -15,7 +15,6 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Snackbars from "./Snackbars";
 import { RecipesContext } from "../../context/RecipesContext";
 
-
 function ConfirmationDialogRaw(props) {
   const { onClose, value: valueProp, open, options, ...other } = props;
   const [value, setValue] = React.useState(valueProp);
@@ -55,20 +54,9 @@ function ConfirmationDialogRaw(props) {
     >
       <DialogTitle>Substitutes</DialogTitle>
       <DialogContent dividers>
-        <RadioGroup
-          ref={radioGroupRef}
-          aria-label="ringtone"
-          name="ringtone"
-          value={value}
-          onChange={handleChange}
-        >
+        <RadioGroup ref={radioGroupRef} aria-label="ringtone" name="ringtone" value={value} onChange={handleChange}>
           {options.map((option) => (
-            <FormControlLabel
-              value={option}
-              key={option}
-              control={<Radio />}
-              label={option}
-            />
+            <FormControlLabel value={option} key={option} control={<Radio />} label={option} />
           ))}
         </RadioGroup>
       </DialogContent>
@@ -89,15 +77,15 @@ ConfirmationDialogRaw.propTypes = {
 };
 
 export default function SubstitutesPopup({ open, setOpen, data }) {
-    const [snackOpen, setSnackOpen] = React.useState(false);
+  const [snackOpen, setSnackOpen] = React.useState(false);
   const [value, setValue] = React.useState("");
-  const { addSubstitutes } = React.useContext(RecipesContext)
+  const { addSubstitutes } = React.useContext(RecipesContext);
 
-    React.useEffect(() => {
-        if(data.status === "failure"){
-            setSnackOpen(true)
-        }
-    }, [data])
+  React.useEffect(() => {
+    if (data.status === "failure") {
+      setSnackOpen(true);
+    }
+  }, [data]);
 
   const handleClickListItem = () => {
     setOpen(true);
@@ -112,10 +100,10 @@ export default function SubstitutesPopup({ open, setOpen, data }) {
   };
 
   React.useEffect(() => {
-    if(!open && value){
-        addSubstitutes({ingredient: data.ingredient, value: value})
+    if (!open && value) {
+      addSubstitutes({ ingredient: data.ingredient, value: value });
     }
-  }, [open, value])
+  }, [open, value]);
 
   return (
     <>
@@ -133,8 +121,7 @@ export default function SubstitutesPopup({ open, setOpen, data }) {
           </List>
         </Box>
       )}
-        <Snackbars message={data.message} snackOpen={snackOpen} setSnackOpen={setSnackOpen}/>
-      
+      <Snackbars message={data.message} snackOpen={snackOpen} setSnackOpen={setSnackOpen} />
     </>
   );
 }

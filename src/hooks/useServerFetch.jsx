@@ -24,7 +24,6 @@ function useServerFetch(type, url, query, body) {
   }, [makeAPICall]);
 
   const signup = useCallback(async (username, password) => {
-    console.log(username, password)
     return await makeAPICall("/api/users/signup", {
       method: "put",
       data: {
@@ -45,16 +44,6 @@ function useServerFetch(type, url, query, body) {
       method: "get",
     });
   }, [makeAPICall]);
-
-  const signup = useCallback(async (username, password) => {
-    return await makeAPICall("/api/users/signup", {
-      method: "put",
-      data: {
-        username,
-        password,
-      },
-    });
-  }, []);
 
   const addFav = useCallback(async (recipe_id) => {
     return await makeAPICall("/api/favorites/addFav", {
@@ -257,7 +246,6 @@ function useServerFetch(type, url, query, body) {
     searchIngredients,
     searchIngredientInfo,
     addIngredientByRecipeId,
-    signup
   };
 }
 

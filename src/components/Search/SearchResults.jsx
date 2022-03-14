@@ -10,16 +10,18 @@ const CardCon = styled.div`
 `;
 
 function SearchResults({ data }) {
-  console.log('searchResults')
-  console.log(data)
+  console.log("searchResults");
+  console.log(data);
   return (
     <>
-      { data && <CardCon>
-        {data.results.map((item) => {
-          return <ResultCard key={item.recipe_id} item={item} />;
-        })}
-        {data.length === 0 && <span>No results</span>}
-      </CardCon> }
+      {data && (
+        <CardCon>
+          {data.results.map((item) => {
+            return <ResultCard key={item.recipe_id} item={item} />;
+          })}
+          {data.length === 0 && <span>No results</span>}
+        </CardCon>
+      )}
     </>
   );
 }

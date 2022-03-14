@@ -18,7 +18,7 @@ import { PantryContext } from "./context/PantryContext";
 import useServerFetch from "./hooks/useServerFetch";
 import { SearchContext } from "./context/SearchContext";
 import { RecipesContext } from "./context/RecipesContext";
-import { ShoppingListContext } from "./context/ShoppingContext";
+import { ShoppingListContext } from "./context/ShoppingContex";
 import SignUp from "./components/SignUp";
 
 function App() {
@@ -94,14 +94,6 @@ function App() {
             </ProtectedRoutes>
           }
         />
-        <Route
-          path="/signup"
-          element={
-            <ProtectedRoutes isPrivate={false}>
-              <Signup />
-            </ProtectedRoutes>
-          }
-        />
         {/* <Route
           path="/settings"
           element={
@@ -142,14 +134,14 @@ function App() {
             </ProtectedRoutes>
           }
         />
-        {/* <Route
+        <Route
           path="/shoppinglist"
           element={
             <ProtectedRoutes isPrivate={true}>
               <ShoppingList />
             </ProtectedRoutes>
           }
-        /> */}
+        />
         <Route
           path="*"
           element={
