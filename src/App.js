@@ -19,6 +19,7 @@ import useServerFetch from "./hooks/useServerFetch";
 import { SearchContext } from "./context/SearchContext";
 import { RecipesContext } from "./context/RecipesContext";
 import { ShoppingListContext } from "./context/ShoppingContex";
+import SignUp from "./components/SignUp";
 
 function App() {
   const [querry, setQuerry] = useState(null);
@@ -56,6 +57,7 @@ function App() {
   useEffect(() => {
     async function init() {
       const res = await verify();
+      console.log(res)
       if (res.data.success) {
         setUser(res.data.data.username);
       }
@@ -80,7 +82,15 @@ function App() {
           path="/login"
           element={
             <ProtectedRoutes isPrivate={false}>
-              <Login></Login>
+              <Login/>
+            </ProtectedRoutes>
+          }
+        />
+        <Route
+          path="/signup"
+          element={
+            <ProtectedRoutes isPrivate={false}>
+              <SignUp/>
             </ProtectedRoutes>
           }
         />
@@ -129,6 +139,14 @@ function App() {
           element={
             <ProtectedRoutes isPrivate={true}>
               <ShoppingList />
+            </ProtectedRoutes>
+          }
+        />
+        <Route
+          path="*"
+          element={
+            <ProtectedRoutes isPrivate={true}>
+              <Recipes />
             </ProtectedRoutes>
           }
         />

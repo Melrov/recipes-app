@@ -38,10 +38,12 @@ function PantryProvider({ children }) {
   const addIngredient = useCallback(
     async (ingredient) => {
       const res = await add(ingredient.ingredient_id, 1);
-      console.log(res, ingredient)
+      console.log(res, ingredient);
       if (res.data.success) {
         setIngredients((curr) => [...curr, ingredient]);
+        return true;
       }
+      return false;
     },
     [add]
   );
@@ -58,9 +60,9 @@ function PantryProvider({ children }) {
 
   const addIngredientById = useCallback(
     async (recipe_id, ingredient) => {
-      console.log(recipe_id)
+      console.log(recipe_id);
       const res = await addByRecipeId(recipe_id, ingredient.ingredient_id);
-      console.log(res)
+      console.log(res);
       if (res.data.success) {
         setIngredients((curr) => [...curr, res.data.data]);
       }
@@ -83,6 +85,16 @@ function PantryProvider({ children }) {
     [getIngredientIndex, edit, ingredients]
   );
 
+  const removeIngredient = useCallback(
+    async (ingredient_id) => {
+      const res = await remove(ingredient_id);
+      if (res.data.success) {
+        setIngredients((curr) => curr.filter((val) => ingredient_id !== val.ingredient_id));
+      }
+    },
+    [ingredients]
+  );
+
   return (
     <PantryContext.Provider
       value={{
@@ -93,6 +105,7 @@ function PantryProvider({ children }) {
         addIngredientById,
         setIngredients,
         addIngredientBySpoonId,
+        removeIngredient,
       }}
     >
       {children}

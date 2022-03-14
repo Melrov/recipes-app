@@ -13,10 +13,17 @@ router.get("/logout", (req, res) => {
 })
 
 router.post("/login", (req, res) => {
+    if(!req.body.username || !req.body.password){
+        return req.send({success: false, data: null, error: "Invalid data provided"})
+    }
     login(res, req.body.username, req.body.password)
 })
 
 router.put("/signup", (req, res) => {
+    console.log(req.body)
+    if(!req.body.username || !req.body.password){
+        return res.send({success: false, data: null, error: "Invalid data provided"})
+    }
     signup(res, req.body.username, req.body.password)
 })
 

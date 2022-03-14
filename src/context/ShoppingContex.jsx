@@ -1,6 +1,7 @@
-import React, { createContext, useCallback, useEffect, useState } from "react";
+import React, { createContext, useCallback, useContext, useEffect, useState } from "react";
 import useSearchInfo from "../hooks/useSearchInfo";
 import useServerFetch from "../hooks/useServerFetch";
+import { PantryContext } from "./PantryContext";
 
 export const ShoppingListContext = createContext(null);
 
@@ -8,6 +9,7 @@ function ShoppingListProvider({ children }) {
   //const [query, setQuery] = useState("");
   const [shoppingList, setShoppingList] = useState([]);
   //const { data, error, loading } = useSearchInfo(query);
+  const { addIngredient } = useContext(PantryContext)
   const { searchIngredientInfo, addIngredientShopping, removeIngredientShopping, editIngredientShopping, addIngredientBySpoonIdShopping } = useServerFetch();
 
   const addItem = useCallback(
@@ -17,16 +19,18 @@ function ShoppingListProvider({ children }) {
       console.log(res)
       if (res.data.success) {
         setShoppingList((curr) => [...curr, ingredient]);
+        return true
       }
+      return false
     },
     [shoppingList]
   );
 
   const removeItem = useCallback(
-    async (id) => {
-      const res = await removeIngredientShopping(id);
+    async (ingredient_id) => {
+      const res = await removeIngredientShopping(ingredient_id);
       if (res.data.success) {
-        setShoppingList((curr) => curr.filter((val) => id !== val.id));
+        setShoppingList((curr) => curr.filter((val) => ingredient_id !== val.ingredient_id));
       }
     },
     [shoppingList]
@@ -71,6 +75,13 @@ function ShoppingListProvider({ children }) {
     [shoppingList]
   );
 
+  const addToPantryAndRemove = useCallback(async (item) => {
+    const res = await addIngredient(item)
+    if(res){
+      removeItem(item.ingredient_id)
+    }
+  })
+
   const getItemIndex = useCallback(
     (id) => {
       for (let i = 0; i < shoppingList.length; i++) {
@@ -93,6 +104,7 @@ function ShoppingListProvider({ children }) {
         isInShoppingList,
         addItemById,
         changeItemAmount,
+        addToPantryAndRemove
       }}
     >
       {children}

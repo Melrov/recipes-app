@@ -1,5 +1,6 @@
 import axios from "axios";
-import { useCallback } from "react";
+import { useCallback, useContext } from "react";
+import { UserContext } from "../context/UserContext";
 
 function useServerFetch(type, url, query, body) {
 
@@ -7,6 +8,7 @@ function useServerFetch(type, url, query, body) {
     try {
       return await axios( url, config);
     } catch (error) {
+      console.log(error)
       return { success: false, data: null, error: "Something went wrong." };
     }
   }, []);
@@ -14,6 +16,17 @@ function useServerFetch(type, url, query, body) {
   const login = useCallback(async (username, password) => {
     return await makeAPICall("/api/users/login", {
       method: "post",
+      data: {
+        username,
+        password,
+      },
+    });
+  }, [makeAPICall]);
+
+  const signup = useCallback(async (username, password) => {
+    console.log(username, password)
+    return await makeAPICall("/api/users/signup", {
+      method: "put",
       data: {
         username,
         password,
@@ -214,6 +227,7 @@ function useServerFetch(type, url, query, body) {
   return {
     login,
     logout,
+    signup,
     verify,
     addFav,
     removeFav,

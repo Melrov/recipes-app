@@ -6,9 +6,10 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import InputAdornment from "@mui/material/InputAdornment";
 import Input from "@mui/material/Input";
 import IconButton from "@mui/material/IconButton";
-import { styled as muiStyled } from '@mui/material/styles';
+import { styled as muiStyled } from "@mui/material/styles";
 import { UserContext } from "../context/UserContext";
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 
 const Con = styled.div`
   display: flex;
@@ -18,7 +19,7 @@ const Con = styled.div`
   top: 22vh;
 `;
 const Form = styled.form`
-  background-color: #CDD6D0;
+  background-color: #cdd6d0;
   border-radius: 15px;
   padding: 25px;
   display: flex;
@@ -38,26 +39,35 @@ const Header = styled.h2`
   margin-right: auto;
 `;
 const SubmitButton = styled(Button)({
-    backgroundColor: "#D6A99A",
-    '&:hover':{
-        backgroundColor: "#E16036"
-    }
-})
+  backgroundColor: "#D6A99A",
+  marginBottom: "5px !important",
+  "&:hover": {
+    backgroundColor: "#E16036",
+  },
+});
+const Error = styled.p`
+  color: rgb(255 151 151);
+  background: rgb(201 22 22 / 85%);
+  border: 1px solid rgb(239 45 45);
+  padding: 6px;
+  border-radius: 5px;
+`;
+const Register = styled.span`
+  margin: 8px;
+  cursor: pointer;
+  color: rgb(205 66 20 / 73%);
+  &:hover {
+    color: rgb(205 66 20 / 100%);
+  }
+`;
 
 function Login() {
-  const {
-    userName,
-    setUserName,
-    password,
-    setPassword,
-    uError,
-    pError,
-    showError,
-    login,
-  } = useContext(UserContext);
+  const { userName, setUserName, password, setPassword, uError, pError, error, showError, login } = useContext(UserContext);
+  const navigate = useNavigate();
   return (
     <Con>
       <Form onSubmit={login}>
+        {error && <Error>{error}</Error>}
         <Header>Login</Header>
         <InputCon>
           <TextField
@@ -90,6 +100,9 @@ function Login() {
         <SubmitButton variant="contained" type="submit">
           Login
         </SubmitButton>
+        <p>
+          Don't have an account? <Register onClick={() => navigate("/signup")}>Register</Register>
+        </p>
       </Form>
     </Con>
   );

@@ -11,6 +11,7 @@ function UserProvider(props) {
   const [pError, setPError] = useState(null);
   const [showError, setShowError] = useState(false);
   const { login: apiLogin, logout: apiLogout } = useServerFetch()
+  const [error, setError] = useState(null)
 
   useEffect(() => {
     if (userName.length < 4 || userName.length > 10) {
@@ -38,6 +39,9 @@ function UserProvider(props) {
         setUserName("")
         setPassword("")
       }
+      else {
+        setError(res.data.error)
+      }
     }
     return false;
   }, [uError, pError, userName, password, showError]);
@@ -61,6 +65,7 @@ function UserProvider(props) {
         setPassword,
         uError,
         pError,
+        error,
         showError,
         login,
         logout,
