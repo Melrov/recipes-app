@@ -189,13 +189,13 @@ function useSearch(query) {
       setError(null);
       setLoading(true);
       try {
-        console.log('api call')
+        //console.log('api call')
         const res = await axios({
           baseURL: "https://api.spoonacular.com/recipes/complexSearch",
           params: params,
         });
         setData(res.data)
-        console.log(res);
+        //console.log(res);
       } catch (error) {
         setError(error);
       }
@@ -206,7 +206,7 @@ function useSearch(query) {
       init();
     }
     if(times === 0){
-      console.log('out of calls')
+      //console.log('out of calls')
     }
   }, [query, lastQuery, params]);
 

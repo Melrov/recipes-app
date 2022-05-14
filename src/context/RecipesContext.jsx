@@ -16,9 +16,9 @@ function RecipesProvider({ children }) {
 
   const addRecipe = useCallback(
     async (recipe) => {
-      console.log(recipe);
+      //console.log(recipe);
       const res = await addFav(recipe.recipe_id);
-      console.log(res);
+      //console.log(res);
       if (res.data.success) {
         setRecipes((curr) => [...curr, recipe]);
       }
@@ -30,7 +30,7 @@ function RecipesProvider({ children }) {
   const removeRecipe = useCallback(
     async (recipe_id) => {
       const res = await removeFav(recipe_id);
-      console.log(res)
+      //console.log(res)
       if (res.data.success) {
         setRecipes((curr) => curr.filter((val) => recipe_id !== val.recipe_id));
       }

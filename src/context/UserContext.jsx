@@ -33,7 +33,7 @@ function UserProvider(props) {
     }
     if (!uError && !pError) {
       const res = await apiLogin(userName, password)
-      console.log(res)
+      //console.log(res)
       if(res.data.success){
         setUser(userName)
         setUserName("")

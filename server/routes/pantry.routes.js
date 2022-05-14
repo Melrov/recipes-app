@@ -74,7 +74,7 @@ router.get("/", (req, res) => {
 });
 
 router.put("/addByRecipe_id", (req, res) => {
-  console.log(req.body);
+  //console.log(req.body);
   if (!req.body.recipe_id || !req.body.ingredient_id) {
     return res.send({
       success: false,

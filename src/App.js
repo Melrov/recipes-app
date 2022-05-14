@@ -57,7 +57,7 @@ function App() {
   useEffect(() => {
     async function init() {
       const res = await verify();
-      console.log(res)
+      //console.log(res)
       if (res.data.success) {
         setUser(res.data.data.username);
       }

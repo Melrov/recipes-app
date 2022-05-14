@@ -10,8 +10,8 @@ const CardCon = styled.div`
 `;
 
 function SearchResults({ data }) {
-  console.log("searchResults");
-  console.log(data);
+  //console.log("searchResults");
+  //console.log(data);
   return (
     <>
       {data && (

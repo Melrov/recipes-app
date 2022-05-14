@@ -23,7 +23,7 @@ function MoreInfo() {
   useEffect(() => {
     async function init() {
       const res = await recipeById(id);
-      console.log(res);
+      //console.log(res);
       if (res.data.success) {
         setData(res.data.data);
       }
@@ -34,7 +34,7 @@ function MoreInfo() {
   }, []);
 
   function recipeClick() {
-    console.log("ran");
+    //console.log("ran");
     if (!isInRecipes(data.recipe_id)) {
       addRecipe(data);
     } else {

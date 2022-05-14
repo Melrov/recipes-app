@@ -10,7 +10,7 @@ const router = express.Router();
 router.use(authenticate);
 
 router.put("/addFav", (req, res) => {
-  console.log(req.body)
+  //console.log(req.body)
   if (!req.body.recipe_id) {
     return res.send({
       success: false,

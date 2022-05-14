@@ -99,7 +99,7 @@ function SignUp() {
         e.preventDefault()
         if(!uError && !pError && !spError){
             const res = await apiSignUp(userName, password)
-            console.log(res)
+            //console.log(res)
             if(res.data.success){
                 navigate('/login')
             }

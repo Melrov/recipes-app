@@ -13,7 +13,7 @@ function useSearchInfo(url) {
 
   useEffect(() => {
     async function init() {
-      console.log('api call')
+      //console.log('api call')
       setLastUrl(url)
       setData(null);
       setError(null);
@@ -26,7 +26,7 @@ function useSearchInfo(url) {
           },
         });
         setData(res.data)
-        console.log(res);
+        //console.log(res);
       } catch (error) {
         setError(error);
       }
@@ -37,7 +37,7 @@ function useSearchInfo(url) {
       //times--;
     }
     if(times === 0){
-      console.log('out of calls')
+      //console.log('out of calls')
     }
   }, [url, lastUrl]);
 

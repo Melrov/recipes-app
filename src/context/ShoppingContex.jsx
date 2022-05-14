@@ -14,9 +14,9 @@ function ShoppingListProvider({ children }) {
 
   const addItem = useCallback(
     async (ingredient) => {
-      console.log(ingredient)
+      //console.log(ingredient)
       const res = await addIngredientShopping(ingredient.ingredient_id, 1);
-      console.log(res)
+      //console.log(res)
       if (res.data.success) {
         setShoppingList((curr) => [...curr, ingredient]);
         return true
@@ -47,9 +47,9 @@ function ShoppingListProvider({ children }) {
   );
 
   const addItemById = useCallback(async(item) => {
-    console.log(item)
+    //console.log(item)
     const res = await addIngredientBySpoonIdShopping(item)
-    console.log(res)
+    //console.log(res)
     if(res.data.success){
       setShoppingList((curr) => [...curr, item])
     }
@@ -58,7 +58,7 @@ function ShoppingListProvider({ children }) {
   const changeItemAmount = useCallback(
     async (ingredient_id, amount) => {
       const res = await editIngredientShopping(ingredient_id, amount);
-      console.log(res, getItemIndex(ingredient_id), ingredient_id)
+      //console.log(res, getItemIndex(ingredient_id), ingredient_id)
       if (res.data.success) {
         const index = getItemIndex(ingredient_id);
         if (index >= 0) {

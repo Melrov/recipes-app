@@ -39,7 +39,7 @@ async function searchRecipeById(res, spoonId) {
        WHERE recipe_ingredient.recipe_id = ?`,
       [recipe_id]
     );
-    console.log(recipe_ingredients, recipe_id)
+    //console.log(recipe_ingredients, recipe_id)
     const retRecipe = await Object.assign({...newRecipe, recipe_id }, {
       extendedIngredients: recipe_ingredients,
     });
@@ -108,7 +108,7 @@ async function singleIngredientSearch(res, spoon_id, user_id) {
     if (ingredient) {
       return res.send({ success: true, data: ingredient, error: null });
     }
-    console.log(ingredient, spoon_id);
+    //console.log(ingredient, spoon_id);
     const apiRes = await apiCall(`https://api.spoonacular.com/food/ingredients/${spoon_id}/information?amount=1`, {});
     const fixedRes = {
       spoon_id: apiRes.data.id,

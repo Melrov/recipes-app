@@ -12,7 +12,7 @@ function useIngredSearch(func, query) {
 
   useEffect(() => {
     async function init() {
-      console.log('api call')
+      //console.log('api call')
       setData(null);
       setError(null);
       setLoading(null);
@@ -25,7 +25,7 @@ function useIngredSearch(func, query) {
           },
         });
         setData(res.data)
-        console.log(res);
+        //console.log(res);
       } catch (error) {
         setError(error);
       }
@@ -35,7 +35,7 @@ function useIngredSearch(func, query) {
       //times--;
     }
     if(times === 0){
-      console.log('out of calls')
+      //console.log('out of calls')
     }
   }, [query]);
 

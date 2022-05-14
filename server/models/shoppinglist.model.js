@@ -51,7 +51,7 @@ async function addIngredientBySpoonId(res, shopping_list, ingredient) {
     );
     return res.send({ success: true, data: inserted, error: null });
   } catch (error) {
-    console.log("--------------------------------------------------");
+    //console.log("--------------------------------------------------");
     console.log(error);
     return res.send({
       success: false,

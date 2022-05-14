@@ -20,7 +20,7 @@ router.post("/login", (req, res) => {
 })
 
 router.put("/signup", (req, res) => {
-    console.log(req.body)
+    //console.log(req.body)
     if(!req.body.username || !req.body.password){
         return res.send({success: false, data: null, error: "Invalid data provided"})
     }
