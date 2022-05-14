@@ -11,6 +11,7 @@ const Card = styled.div`
   height: fit-content;
   font-size: 13px;
   margin: 7px;
+  cursor: pointer;
   &:hover {
     text-decoration: underline;
     box-shadow: 0px 0px 16px 1px black;
