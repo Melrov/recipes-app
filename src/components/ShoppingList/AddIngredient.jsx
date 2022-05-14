@@ -41,8 +41,8 @@ function AddIngredient({ data, setShowNew, showNew }) {
     <>
     { showNew && item && <div>
       <img src={baseUrl + data.image} />
-      {/* <span>{data.nameClean ? data.nameClean : data.name}</span>
-      <input
+       <span>{data.nameClean ? data.nameClean : data.name}</span>
+      {/*<input
         type="checkbox"
         name="check"
         onClick={() => setCustomName(!customName)}
@@ -72,8 +72,14 @@ function AddIngredient({ data, setShowNew, showNew }) {
       </div>
       <IconButton
         onClick={() => {
-            addItemById(item);
-        }}
+          //console.log(item)
+              if (isInShoppingList(item.ingredient_id)) {
+                changeItemAmount(item.ingredient_id, item.amount);
+              } else {
+                addItemById(item);
+              }
+              setShowNew(false);
+            }}
       >
         <Icon sx={{ fontSize: 25 }}>add_circle</Icon>
       </IconButton>
