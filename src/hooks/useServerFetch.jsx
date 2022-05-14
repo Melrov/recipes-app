@@ -8,7 +8,7 @@ function useServerFetch(type, url, query, body) {
     try {
       return await axios( url, config);
     } catch (error) {
-      console.log(error)
+      //console.log(error)
       return { success: false, data: null, error: "Something went wrong." };
     }
   }, []);
@@ -87,7 +87,7 @@ function useServerFetch(type, url, query, body) {
           amount: ingredient.amount
         },
         ingredient: {
-          spoon_id: ingredient.id,
+          spoon_id: ingredient.spoon_id,
           name: ingredient.original || ingredient.name,
           image: ingredient.image,
           aisle: ingredient.aisle,
