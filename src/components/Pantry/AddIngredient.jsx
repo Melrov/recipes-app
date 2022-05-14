@@ -19,8 +19,8 @@ const AddButtonR = styled.div`
   height: 10px;
 `;
 
-function AddIngredient({ data, setShowNew }) {
-  console.log(data);
+function AddIngredient({ data, setShowNew, showNew }) {
+  //console.log(data);
   const [item, setItem] = useState(null);
   //const [customName, setCustomName] = useState(false);
   const {
@@ -38,7 +38,7 @@ function AddIngredient({ data, setShowNew }) {
 
   return (
     <>
-      {item && (
+      {showNew && item && (
         <div>
           <img src={baseUrl + data.image} />
           <span>{data.nameClean ? data.nameClean : data.name}</span>
@@ -75,7 +75,7 @@ function AddIngredient({ data, setShowNew }) {
               if (isInPantry(item.id)) {
                 changeIngredientAmount(item.amount, item.id);
               } else {
-                console.log(item);
+                //console.log(item);
                 addIngredientBySpoonId(item);
               }
               setShowNew(false);

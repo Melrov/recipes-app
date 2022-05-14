@@ -56,7 +56,7 @@ function Search() {
 
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
-      console.log(search);
+      //console.log(search);
       setQuery(search);
       if (!search) {
         setShowResults(null);
@@ -71,7 +71,7 @@ function Search() {
   useEffect(() => {
     async function init() {
       const res = await searchIngredients(query);
-      console.log(res);
+      //console.log(res);
       if (res.data.success) {
         setQueryData(res.data.data);
       }
@@ -120,7 +120,7 @@ function Search() {
           </IconButton>
         )}
       </Paper>
-      {showNew && singleQueryData && <AddIngredient data={singleQueryData} setShowNew={setShowNew} />}
+      {singleQueryData && <AddIngredient data={singleQueryData} setShowNew={setShowNew} showNew={showNew}/>}
       {showResults && queryData && (
         <ResultsCon>
           {queryData.map((item) => {
