@@ -6,7 +6,7 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import InputAdornment from "@mui/material/InputAdornment";
 import Input from "@mui/material/Input";
 import IconButton from "@mui/material/IconButton";
-import { styled as muiStyled } from '@mui/material/styles';
+import { styled as muiStyled } from "@mui/material/styles";
 import { UserContext } from "../context/UserContext";
 import styled from "styled-components";
 import useServerFetch from "../hooks/useServerFetch";
@@ -20,7 +20,7 @@ const Con = styled.div`
   top: 22vh;
 `;
 const Form = styled.form`
-  background-color: #CDD6D0;
+  background-color: #cdd6d0;
   border-radius: 15px;
   padding: 25px;
   display: flex;
@@ -40,11 +40,11 @@ const Header = styled.h2`
   margin-right: auto;
 `;
 const SubmitButton = styled(Button)({
-    backgroundColor: "#D6A99A",
-    '&:hover':{
-        backgroundColor: "#E16036"
-    }
-})
+  backgroundColor: "#D6A99A",
+  "&:hover": {
+    backgroundColor: "#E16036",
+  },
+});
 const Error = styled.p`
   color: rgb(255 151 151);
   background: rgb(201 22 22 / 85%);
@@ -62,59 +62,60 @@ const Register = styled.span`
 `;
 
 function SignUp() {
-    const [userName, setUserName] = useState("")
-    const [password, setPassword] = useState("")
-    const [secondPassword, setSecondPassword] = useState("")
-    const [uError, setUError] = useState(null)
-    const [pError, setPError] = useState(null)
-    const [spError, setSpError] = useState(null)
-    const [showError, setShowError] = useState(false)
-    const [error, setError] = useState(null)
-    const { signup: apiSignUp } = useServerFetch()
-    const navigate = useNavigate()
+  const [userName, setUserName] = useState("");
+  const [password, setPassword] = useState("");
+  const [secondPassword, setSecondPassword] = useState("");
+  const [uError, setUError] = useState(null);
+  const [pError, setPError] = useState(null);
+  const [spError, setSpError] = useState(null);
+  const [showError, setShowError] = useState(false);
+  const [error, setError] = useState(null);
+  const { signup: apiSignUp } = useServerFetch();
+  const navigate = useNavigate();
 
-    useEffect(() => {
-        if (userName.length < 4 || userName.length > 10) {
-          setUError("Mush be between 4 and 10 characters");
+  useEffect(() => {
+    if (userName.length < 4 || userName.length > 10) {
+      setUError("Mush be between 4 and 10 characters");
+    } else {
+      setUError(null);
+    }
+    if (password.length < 4 || password.length > 10) {
+      setPError("Mush be between 4 and 10 characters");
+    } else {
+      setPError(null);
+    }
+  }, [userName, password]);
+
+  useEffect(() => {
+    if (password !== secondPassword) {
+      setSpError("Password does not match");
+    } else {
+      setSpError(null);
+    }
+  }, [password, secondPassword]);
+
+  const signup = useCallback(
+    async (e) => {
+      e.preventDefault();
+      if (!uError && !pError && !spError) {
+        const res = await apiSignUp(userName, password);
+        //console.log(res)
+        if (res.data.success) {
+          navigate("/login");
         } else {
-          setUError(null);
+          setShowError(true);
+          setError(res.data.error);
         }
-        if (password.length < 4 || password.length > 10) {
-          setPError("Mush be between 4 and 10 characters");
-        } else {
-          setPError(null);
-        }
-      }, [userName, password]);
-
-    useEffect(() => {
-        if(password !== secondPassword){
-            setSpError("Password does not match")
-        }
-        else {
-            setSpError(null)
-        }
-    }, [password, secondPassword])
-
-    const signup = useCallback(async(e) => {
-        e.preventDefault()
-        if(!uError && !pError && !spError){
-            const res = await apiSignUp(userName, password)
-            //console.log(res)
-            if(res.data.success){
-                navigate('/login')
-            }
-            else{
-                setShowError(true)
-                setError(res.data.error)
-            }
-        }
-        setShowError(true)
-    }, [userName, password, uError, pError, spError])
+      }
+      setShowError(true);
+    },
+    [userName, password, uError, pError, spError]
+  );
 
   return (
     <Con>
       <Form onSubmit={signup}>
-      {error && <Error>{error}</Error>}
+        {error && <Error>{error}</Error>}
         <Header>Sign Up</Header>
         <InputCon>
           <TextField
@@ -157,7 +158,7 @@ function SignUp() {
           Sign Up
         </SubmitButton>
         <p>
-        Already have an account? <Register onClick={() => navigate("/login")}>Sign in</Register>
+          Already have an account? <Register onClick={() => navigate("/login")}>Sign in</Register>
         </p>
       </Form>
     </Con>

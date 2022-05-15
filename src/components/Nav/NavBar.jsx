@@ -38,9 +38,9 @@ const Con = styled.div`
 `;
 
 export default function NavBar() {
-  const { user, logout } = React.useContext(UserContext)
+  const { user, logout } = React.useContext(UserContext);
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -54,61 +54,45 @@ export default function NavBar() {
       <Box sx={{ display: "flex", alignItems: "center", textAlign: "center" }}>
         <List>
           <ListItem>
-            <NavLink
-              to="/"
-              style={({ isActive }) =>
-                isActive ? activeStyle : nonActiveStyle
-              }
-            >
+            <NavLink to="/" style={({ isActive }) => (isActive ? activeStyle : nonActiveStyle)}>
               Home
             </NavLink>
           </ListItem>
-          { user && <>
-          <ListItem>
-            <NavLink
-              to="/search"
-              style={({ isActive }) =>
-                isActive ? activeStyle : nonActiveStyle
-              }
-            >
-              Search
-            </NavLink>
-          </ListItem>
-          <ListItem>
-            <NavLink
-              to="/pantry"
-              style={({ isActive }) =>
-                isActive ? activeStyle : nonActiveStyle
-              }
-            >
-              Pantry
-            </NavLink>
-          </ListItem>
-          <ListItem>
-            <NavLink
-              to="/shoppinglist"
-              style={({ isActive }) =>
-                isActive ? activeStyle : nonActiveStyle
-              }
-            >
-              Shopping List
-            </NavLink>
-          </ListItem>
-          </> }
+          {user && (
+            <>
+              <ListItem>
+                <NavLink to="/search" style={({ isActive }) => (isActive ? activeStyle : nonActiveStyle)}>
+                  Search
+                </NavLink>
+              </ListItem>
+              <ListItem>
+                <NavLink to="/pantry" style={({ isActive }) => (isActive ? activeStyle : nonActiveStyle)}>
+                  Pantry
+                </NavLink>
+              </ListItem>
+              <ListItem>
+                <NavLink to="/shoppinglist" style={({ isActive }) => (isActive ? activeStyle : nonActiveStyle)}>
+                  Shopping List
+                </NavLink>
+              </ListItem>
+            </>
+          )}
         </List>
         {/* <Box sx={{ p: 3 }} /> */}
-        { user && <Tooltip title="Account settings">
-          <IconButton
-            onClick={handleClick}
-            size="small"
-            sx={{ ml: 2 }}
-            aria-controls={open ? "account-menu" : undefined}
-            aria-haspopup="true"
-            aria-expanded={open ? "true" : undefined}
-          >
-            <Avatar sx={{ width: 32, height: 32 }}>{user.charAt(0).toUpperCase()}</Avatar>
-          </IconButton>
-        </Tooltip> }
+        {user && (
+          <Tooltip title="Account settings">
+            <IconButton
+              onClick={handleClick}
+              size="small"
+              sx={{ ml: 2 }}
+              aria-controls={open ? "account-menu" : undefined}
+              aria-haspopup="true"
+              aria-expanded={open ? "true" : undefined}
+            >
+              <Avatar sx={{ width: 32, height: 32 }}>{user.charAt(0).toUpperCase()}</Avatar>
+            </IconButton>
+          </Tooltip>
+        )}
       </Box>
       <Menu
         anchorEl={anchorEl}

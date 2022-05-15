@@ -23,17 +23,11 @@ function AddIngredient({ data, setShowNew, showNew }) {
   //console.log(data);
   const [item, setItem] = useState(null);
   //const [customName, setCustomName] = useState(false);
-  const {
-    ingredients,
-    isInPantry,
-    addIngredient,
-    changeIngredientAmount,
-    addIngredientBySpoonId,
-  } = useContext(PantryContext);
-  
+  const { ingredients, isInPantry, addIngredient, changeIngredientAmount, addIngredientBySpoonId } = useContext(PantryContext);
+
   useEffect(() => {
     setItem(Object.assign({ amount: 1 }, data));
-    setShowNew(true)
+    setShowNew(true);
   }, [data]);
 
   return (
@@ -54,21 +48,9 @@ function AddIngredient({ data, setShowNew, showNew }) {
         </div>
       )} */}
           <div>
-            <button
-              onClick={() =>
-                setItem((curr) => ({ ...curr, amount: curr.amount - 1 }))
-              }
-            >
-              -
-            </button>
+            <button onClick={() => setItem((curr) => ({ ...curr, amount: curr.amount - 1 }))}>-</button>
             <span>{item.amount}</span>
-            <button
-              onClick={() =>
-                setItem((curr) => ({ ...curr, amount: curr.amount + 1 }))
-              }
-            >
-              +
-            </button>
+            <button onClick={() => setItem((curr) => ({ ...curr, amount: curr.amount + 1 }))}>+</button>
           </div>
           <IconButton
             onClick={() => {

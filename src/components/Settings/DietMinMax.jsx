@@ -31,7 +31,7 @@ function DietMinMax({ name, measurement, value, setter }) {
 
   // !todo maybe add regex to delete characters instead
   const handleChange = (prop) => (event) => {
-      //setter(event.target.value)
+    //setter(event.target.value)
     if (!isNaN(event.target.value.charAt(event.target.value.length - 1))) {
       let curr = [...value];
       curr[prop] = isNaN(parseInt(event.target.value)) ? 0 : parseInt(event.target.value);
@@ -47,28 +47,20 @@ function DietMinMax({ name, measurement, value, setter }) {
             id="outlined-adornment-weight"
             value={value[0]}
             onChange={handleChange(0)}
-            endAdornment={
-              <InputAdornment position="end">{measurement}</InputAdornment>
-            }
+            endAdornment={<InputAdornment position="end">{measurement}</InputAdornment>}
             aria-describedby="outlined-weight-helper-text"
           />
-          <FormHelperText id="outlined-weight-helper-text">
-            {"Min-" + name}
-          </FormHelperText>
+          <FormHelperText id="outlined-weight-helper-text">{"Min-" + name}</FormHelperText>
         </FormControl>
         <FormControl sx={{ m: 1, width: "25ch" }} variant="outlined">
           <OutlinedInput
             id="outlined-adornment-weight"
             value={value[1]}
             onChange={handleChange(1)}
-            endAdornment={
-              <InputAdornment position="end">{measurement}</InputAdornment>
-            }
+            endAdornment={<InputAdornment position="end">{measurement}</InputAdornment>}
             aria-describedby="outlined-weight-helper-text"
           />
-          <FormHelperText id="outlined-weight-helper-text">
-            {"Max-" + name}
-          </FormHelperText>
+          <FormHelperText id="outlined-weight-helper-text">{"Max-" + name}</FormHelperText>
         </FormControl>
       </Form>
     </Con>

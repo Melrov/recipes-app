@@ -23,26 +23,26 @@ const AddButtonR = styled.div`
 function AddIngredient({ data, setShowNew, showNew }) {
   const [item, setItem] = useState(null);
   //const [customName, setCustomName] = useState(false);
-  const { shoppingList, addItemById, isInShoppingList, changeItemAmount } =
-    useContext(ShoppingListContext);
+  const { shoppingList, addItemById, isInShoppingList, changeItemAmount } = useContext(ShoppingListContext);
 
   useEffect(() => {
     setItem(Object.assign({ amount: 1 }, data));
-    setShowNew(true)
+    setShowNew(true);
   }, [data]);
 
   useEffect(() => {
-    if( item && isInShoppingList(item.ingredient_id)){
-      setShowNew(false)
+    if (item && isInShoppingList(item.ingredient_id)) {
+      setShowNew(false);
     }
-  }, [isInShoppingList])
+  }, [isInShoppingList]);
 
   return (
     <>
-    { showNew && item && <div>
-      <img src={baseUrl + data.image} />
-       <span>{data.nameClean ? data.nameClean : data.name}</span>
-      {/*<input
+      {showNew && item && (
+        <div>
+          <img src={baseUrl + data.image} />
+          <span>{data.nameClean ? data.nameClean : data.name}</span>
+          {/*<input
         type="checkbox"
         name="check"
         onClick={() => setCustomName(!customName)}
@@ -53,26 +53,14 @@ function AddIngredient({ data, setShowNew, showNew }) {
           <input type="text" />
         </div>
       )} */}
-      <div>
-        <button
-          onClick={() =>
-            setItem((curr) => ({ ...curr, amount: curr.amount - 1 }))
-          }
-        >
-          -
-        </button>
-        <span>{item.amount}</span>
-        <button
-          onClick={() =>
-            setItem((curr) => ({ ...curr, amount: curr.amount + 1 }))
-          }
-        >
-          +
-        </button>
-      </div>
-      <IconButton
-        onClick={() => {
-          //console.log(item)
+          <div>
+            <button onClick={() => setItem((curr) => ({ ...curr, amount: curr.amount - 1 }))}>-</button>
+            <span>{item.amount}</span>
+            <button onClick={() => setItem((curr) => ({ ...curr, amount: curr.amount + 1 }))}>+</button>
+          </div>
+          <IconButton
+            onClick={() => {
+              //console.log(item)
               if (isInShoppingList(item.ingredient_id)) {
                 changeItemAmount(item.ingredient_id, item.amount);
               } else {
@@ -80,10 +68,11 @@ function AddIngredient({ data, setShowNew, showNew }) {
               }
               setShowNew(false);
             }}
-      >
-        <Icon sx={{ fontSize: 25 }}>add_circle</Icon>
-      </IconButton>
-    </div> }
+          >
+            <Icon sx={{ fontSize: 25 }}>add_circle</Icon>
+          </IconButton>
+        </div>
+      )}
     </>
   );
 }
