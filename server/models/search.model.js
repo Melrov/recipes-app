@@ -26,6 +26,7 @@ async function searchRecipeById(res, spoonId) {
       dairy_free: apiRes.data.dairyFree || false,
       source_url: apiRes.data.sourceUrl,
       spoon_url: apiRes.data.spoonacularSourceUrl,
+      price_per_serving: apiRes.data.pricePerServing,
     };
 
     const { insertId: recipe_id } = await query("INSERT INTO recipes SET ?", [newRecipe]);
