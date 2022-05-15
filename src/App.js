@@ -1,6 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
-import useFetch from "./hooks/useFetch";
 import Login from "./components/Login";
 import ProtectedRoutes from "./components/ProtectedRoutes";
 import Home from "./components/Home";
@@ -22,6 +21,7 @@ import { ShoppingListContext } from "./context/ShoppingContex";
 import SignUp from "./components/SignUp";
 
 function App() {
+  const [loading, setLoading] = useState(true)
   const [querry, setQuerry] = useState(null);
   const { user, setUser } = useContext(UserContext);
   const { setIngredients } = useContext(PantryContext);
@@ -61,12 +61,14 @@ function App() {
       if (res.data.success) {
         setUser(res.data.data.username);
       }
+      setLoading(false)
     }
     init();
   }, []);
 
   return (
-    <Router>
+    <>
+    { !loading && <Router>
       <NavBar />
       <Routes>
         <Route
@@ -151,7 +153,8 @@ function App() {
           }
         />
       </Routes>
-    </Router>
+    </Router> }
+    </>
   );
 }
 
