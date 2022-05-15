@@ -28,7 +28,7 @@ router.put("/addIngredient", (req, res) => {
 });
 
 router.put("/addIngredientBySpoonId", (req, res) => {
-  console.log(req.body);
+  //console.log(req.body);
   if (
     !req.body.pantry ||
     !req.body.pantry.amount ||
