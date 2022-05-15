@@ -6,7 +6,7 @@ async function getRecipeBySpoonId(res, spoonId) {
   try {
     const [recipe] = await query(
       `SELECT id as recipe_id, title, spoon_id, image, summary, ready_in, score, servings, spoon_likes,
-      likes, source_name, instructions, vegetarian, vegan, gluten_free, dairy_free, source_url, spoon_url
+      likes, source_name, instructions, vegetarian, vegan, gluten_free, dairy_free, source_url, spoon_url, price_per_serving
        FROM recipes WHERE recipes.spoon_id = ?`,
       [spoonId]
     );
