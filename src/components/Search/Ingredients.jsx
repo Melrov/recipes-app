@@ -315,6 +315,7 @@ const newdaata = [
 const IngredCon = styled.div`
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
 `;
 
 const Item = styled.div`
@@ -332,6 +333,14 @@ const Img = styled.img`
 `;
 const ItemName = styled.span`
   text-align: center;
+`;
+
+const PageCon = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 20px;
+  padding-bottom: 20px;
 `;
 
 const baseUrl = "https://spoonacular.com/cdn/ingredients_100x100/";
@@ -354,8 +363,9 @@ function Ingredients({ recipe_id, serving, ingredients }) {
     }
   }, [data]);
   return (
-    <div>
-      <input type="number" value={servings} onChange={(e) => setServings(e.target.value)} />
+    <PageCon>
+      <label htmlFor="servings">Number of servings</label>
+      <input name="servings" type="number" value={servings} onChange={(e) => setServings(e.target.value)} />
       <IngredCon>
         {ingredients.map((item) => {
           return (
@@ -380,7 +390,7 @@ function Ingredients({ recipe_id, serving, ingredients }) {
         })}
       </IngredCon>
       {data && <SubstitutesPopup open={open} setOpen={setOpen} data={data} />}
-    </div>
+    </PageCon>
   );
 }
 

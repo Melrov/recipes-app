@@ -41,7 +41,10 @@ const dataa = {
 
 const SearchCon = styled.div`
   display: flex;
+  -webkit-box-align: center;
   align-items: center;
+  justify-content: center;
+  padding-top: 30px;
 `;
 const SettingsCon = styled.div`
   display: flex;

@@ -84,33 +84,31 @@ const NameCon = styled.div`
   margin-bottom: auto;
 `;
 
+const ButtonCon = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
 const baseUrl = "https://spoonacular.com/cdn/ingredients_100x100/";
 function IngredientDisplay({ item }) {
   const { changeIngredientAmount, removeIngredient } = useContext(PantryContext);
-  const { isInShoppingList, addItem } = useContext(ShoppingListContext)
+  const { isInShoppingList, addItem } = useContext(ShoppingListContext);
 
   const addToShoppingAndRemove = useCallback(async (item) => {
-    const res = await addItem(item)
-    if(res){
-      removeIngredient(item.ingredient_id)
+    const res = await addItem(item);
+    if (res) {
+      removeIngredient(item.ingredient_id);
     }
-  }, [])
+  }, []);
   return (
     <Item>
       <div>
-        <button
-          onClick={() => changeIngredientAmount(item.ingredient_id, item.amount - 1)}
-        >
-          -
-        </button>
+        <button onClick={() => changeIngredientAmount(item.ingredient_id, item.amount - 1)}>-</button>
         <span>{item.amount}</span>
-        <button
-          onClick={() => changeIngredientAmount(item.ingredient_id, item.amount + 1)}
-        >
-          +
-        </button>
+        <button onClick={() => changeIngredientAmount(item.ingredient_id, item.amount + 1)}>+</button>
       </div>
-      <div>
+      <ButtonCon>
         {!isInShoppingList(item.ingredient_id) && (
           <>
             <button
@@ -139,7 +137,7 @@ function IngredientDisplay({ item }) {
         >
           Remove
         </button>
-      </div>
+      </ButtonCon>
       <ImgCon>
         <Img src={baseUrl + item.image} />
       </ImgCon>

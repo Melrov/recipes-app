@@ -3,7 +3,6 @@ import Paper from "@mui/material/Paper";
 import InputBase from "@mui/material/InputBase";
 import IconButton from "@mui/material/IconButton";
 import SearchIcon from "@mui/icons-material/Search";
-import useFetch from "../../hooks/useFetch";
 import styled from "styled-components";
 import AddIngredient from "./AddIngredient";
 import useSearchInfo from "../../hooks/useSearchInfo";
@@ -38,6 +37,13 @@ const Result = styled.div`
   &:hover {
     background-color: gray;
   }
+`;
+const SearchCon = styled.div`
+  display: flex;
+  -webkit-box-align: center;
+  align-items: center;
+  justify-content: center;
+  padding-top: 12px;
 `;
 
 const baseUrl = "https://spoonacular.com/cdn/ingredients_100x100/";
@@ -94,7 +100,7 @@ function Search() {
   }, [singleQuery]);
 
   return (
-    <>
+    <SearchCon>
       <Paper
         component="form"
         sx={{
@@ -120,7 +126,7 @@ function Search() {
           </IconButton>
         )}
       </Paper>
-      {singleQueryData && <AddIngredient data={singleQueryData} setShowNew={setShowNew} showNew={showNew}/>}
+      {singleQueryData && <AddIngredient data={singleQueryData} setShowNew={setShowNew} showNew={showNew} />}
       {showResults && queryData && (
         <ResultsCon>
           {queryData.map((item) => {
@@ -139,7 +145,7 @@ function Search() {
           })}
         </ResultsCon>
       )}
-    </>
+    </SearchCon>
   );
 }
 

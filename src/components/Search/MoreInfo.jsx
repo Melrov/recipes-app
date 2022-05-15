@@ -1,15 +1,40 @@
-import React, { useState, useEffect, useContext, useCallback } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import { RecipesContext } from "../../context/RecipesContext";
-import useFetch from "../../hooks/useFetch";
 import useSearchInfo from "../../hooks/useSearchInfo";
 import useServerFetch from "../../hooks/useServerFetch";
 import Ingredients from "./Ingredients";
 
+const MainCon = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-left: 20px;
+  margin-right: 20px;
+  margin-bottom: 30px;
+`;
 
 const InfoCon = styled.div`
   display: flex;
+  margin-top: 10px;
+`;
+
+const Img = styled.img`
+  width: auto;
+`;
+const ImgCon = styled.div`
+  max-width: 556px;
+`;
+
+const Text = styled.span`
+  margin-right: 20px;
+`;
+
+const TextCon = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 `;
 
 function MoreInfo() {
@@ -19,6 +44,7 @@ function MoreInfo() {
   const { recipeById } = useServerFetch();
   const { addRecipe, removeRecipe, isInRecipes } = useContext(RecipesContext);
   const [data, setData] = useState(null);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     async function init() {
@@ -26,6 +52,8 @@ function MoreInfo() {
       //console.log(res);
       if (res.data.success) {
         setData(res.data.data);
+      } else {
+        setError(res.data.error);
       }
     }
     if (id) {
@@ -42,41 +70,49 @@ function MoreInfo() {
     }
   }
 
-  const x = "<div>Hello</div>";
   return (
-    <div>
+    <MainCon>
+      {error && <span>{error}</span>}
       {data && (
         <>
           <h2>{data.title}</h2>
-          <img src={data.image} />
+          <ImgCon>
+            <Img src={data.image} />
+          </ImgCon>
           <button onClick={() => recipeClick()}>{isInRecipes(data.recipe_id) ? "Remove from Recipes" : "Add to Recipes"}</button>
           <InfoCon>
             <div>
-              <span>{`$${parseInt(data.pricePerServing) / 100} per serving`}</span>
+              <Text>{`$${parseInt(data["price_per_serving"]) / 100} per serving      `}</Text>
             </div>
             <div>
-              <span>{`${data.spoon_likes} likes`}</span>
+              <Text>{`${data.spoon_likes} likes       `}</Text>
             </div>
             <div>
-              <span>{`Ready in ${data.ready_in} minutes`}</span>
+              <Text>{`Ready in ${data.ready_in} minutes       `}</Text>
             </div>
             <div>
-              <span>{`Spoonacular Score ${data.score}%`}</span>
+              <Text>{`Spoonacular Score ${data.score}%`}</Text>
             </div>
           </InfoCon>
           <Ingredients recipe_id={data.recipe_id} serving={data.servings} ingredients={data.extendedIngredients} />
-          <div dangerouslySetInnerHTML={{ __html: data.summary }}></div>
-          <div>
-            <h3>instructions</h3>
+          <TextCon>
+            {data.summary && <div dangerouslySetInnerHTML={{ __html: data.summary }}></div>}
+            {data.instructions && (
+              <div>
+                <h3>instructions</h3>
 
-            <div dangerouslySetInnerHTML={{ __html: data.instructions }}></div>
-            <p>
-              {" Read the detailed instructions on "} <a href={data.sourceUrl}>{data.creditsText}</a>
-            </p>
-          </div>
+                <div dangerouslySetInnerHTML={{ __html: data.instructions }}></div>
+              </div>
+            )}
+            {data.sourceUrl && data.creditsText && (
+              <p>
+                {" Read the detailed instructions on "} <a href={data.sourceUrl}>{data.creditsText}</a>
+              </p>
+            )}
+          </TextCon>
         </>
       )}
-    </div>
+    </MainCon>
   );
 }
 

@@ -7,6 +7,7 @@ import Search from "./Search";
 const IngredCon = styled.div`
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
 `;
 
 const baseUrl = "https://spoonacular.com/cdn/ingredients_100x100/";
